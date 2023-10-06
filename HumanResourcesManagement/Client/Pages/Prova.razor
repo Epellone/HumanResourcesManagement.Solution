@@ -1,0 +1,30 @@
+﻿@page "/test"
+@inject HttpClient Http
+
+<h3>Test Controller Data</h3>
+
+@if (data == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>Data from Test Controller:</p>
+    <ul>
+        @foreach (var item in data)
+        {
+            <li>@item</li>
+        }
+    </ul>
+}
+
+@code {
+    private string[] data;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Effettua una richiesta GET all'endpoint del controller Test
+        data = await Http.GetFromJsonAsync<string[]>("api/test");
+    }
+}
+
