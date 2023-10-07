@@ -1,4 +1,6 @@
 using HumanResourcesManagementAPI.Models;
+using HumanResourcesManagementAPI.Models.Interface;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace HumanResourcesManagementAPI
@@ -26,6 +28,7 @@ namespace HumanResourcesManagementAPI
             });
 
             builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(builder.Configuration.GetValue<string>("ConnectionString")));
+            builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
