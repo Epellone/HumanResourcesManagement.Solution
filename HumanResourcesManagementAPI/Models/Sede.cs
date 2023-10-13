@@ -13,7 +13,7 @@ namespace HumanResourcesManagementAPI.Models
         public string EmailSede { get; set; }
         public virtual ICollection<Sede_Dipendente> SedeDipendente { get; set; }
 
-        public Sede (Guid Sede, string indirizzo, string RecapitoTel, string EmailSede);
+       // public Sede (Guid Sede, string indirizzo, string RecapitoTel, string EmailSede);
         
     }
 }
