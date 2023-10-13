@@ -35,8 +35,5 @@ namespace HumanResourcesManagementAPI.Controllers
         {
             return repository.DeleteById(id);
         }
-
-
-
     }
 }
