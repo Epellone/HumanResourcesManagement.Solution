@@ -2,6 +2,6 @@
 {
     public class LivelloContrattuale : AggregateRoot
     {
-        public string Descrizione { get; set; }
+        public string? Descrizione { get; set; }
     }
 }
