@@ -1,6 +1,40 @@
 ﻿<h3>Mansioni</h3>
 @page "/Mansioni"
 
-@code {
+<!DOCTYPE html>
 
-}
+<head>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    
+
+    <table>
+        <tr>
+            <th>Descrizioni</th>
+        </tr>
+    </table>
+
+     <label for="scelta">Scegli: </label>
+    
+    <div class="container mt-3">
+        <div class="btn-group" role="group" aria-label="Scelta">
+            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+        </div>
+    </div>
+
+</body>
+

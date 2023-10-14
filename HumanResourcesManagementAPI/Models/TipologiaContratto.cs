@@ -2,6 +2,6 @@
 {
     public class TipologiaContratto : AggregateRoot
     {
-        public string Descrizione { get; set; }
+        public string? Descrizione { get; set; }
     }
 }

@@ -14,6 +14,6 @@ namespace HumanResourcesManagementAPI.Models
         public Guid CandidatoID { get; set; }
         public virtual Candidato Candidato { get; set; }
         [MaxLength(1000)]
-        public string Note { get; set; }
+        public string? Note { get; set; }
     }
 }
