@@ -60,11 +60,11 @@ namespace HumanResourcesManagementAPI.Models
                         .HasForeignKey(s => s.SedeID)
                         .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Sede_Dipendente>()
-                        .HasOne(d => d.Dipendente)
-                        .WithOne()
-                        .HasForeignKey<Sede_Dipendente>(d => d.DipendenteID)
-                        .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<Sede_Dipendente>()
+            //            .HasOne(d => d.Dipendente)
+            //            .WithOne()
+            //            .HasForeignKey<Sede_Dipendente>(d => d.DipendenteID)
+            //            .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

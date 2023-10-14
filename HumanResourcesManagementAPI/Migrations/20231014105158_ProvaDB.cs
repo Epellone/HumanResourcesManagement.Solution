@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HumanResourcesManagementAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class HumanDatabase : Migration
+    public partial class ProvaDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,7 +16,7 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -30,13 +30,13 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cognome = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RecapitoTelefonico = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CF = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Comune = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Provincia = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Nome = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cognome = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RecapitoTelefonico = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CF = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Comune = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Provincia = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DataDiNascita = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ColloquioID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Version = table.Column<int>(type: "int", nullable: false),
@@ -69,7 +69,8 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Candidato = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -83,7 +84,7 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -113,7 +114,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Indirizzo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RecapitoTel = table.Column<int>(type: "int", nullable: false),
+                    RecapitoTel = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailSede = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
@@ -142,7 +143,7 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -156,7 +157,7 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -170,7 +171,7 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CandidatoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
@@ -190,7 +191,7 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CandidatoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
@@ -239,7 +240,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CandidatoID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     HardSkillID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -332,7 +333,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CandidatoID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SoftSkillID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -391,7 +392,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     DipendenteId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TipologiaColloquioID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CandidatoID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Note = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    Note = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     Version = table.Column<int>(type: "int", nullable: false),
                     Attivo = table.Column<bool>(type: "bit", nullable: false)
                 },
