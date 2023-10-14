@@ -55,11 +55,10 @@
         line-height: 3rem;
     }
 
-    .nav-item ::deep a.active 
-    {
-        background-color: rgba(255,255,255,0.25);
-        color: black;
-    }
+        .nav-item ::deep a.active {
+            background-color: #057c7e;
+            color: black;
+        }
 
     .nav-item ::deep a:hover 
     {
@@ -109,11 +108,11 @@
             
         }
 
-        
-        .search-button:hover 
-        {
-            background-color: #45a049;
-        }
+
+            .search-button:hover 
+            {
+                background-color: #04b7ba;
+            }
     }
 
 /* Stile generale per la barra di navigazione */
@@ -148,7 +147,7 @@
 /* Stile per il campo di ricerca */
 /*.form-control {
     border: none;*/ /* Rimuove il bordo del campo di ricerca */
-/*background-color: rgba(255, 255, 255, 0.1);*/ */ /* Sfondo leggermente trasparente */
+/*background-color: rgba(255, 255, 255, 0.1);*/  /* Sfondo leggermente trasparente */
 /*color: #fff;*/ /* Colore del testo nel campo di ricerca */
 /*}*/
 
