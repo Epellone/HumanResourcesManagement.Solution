@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HumanResourcesManagementAPI.Models.Associazioni;
 
 namespace HumanResourcesManagementAPI.Models.Classi
 {

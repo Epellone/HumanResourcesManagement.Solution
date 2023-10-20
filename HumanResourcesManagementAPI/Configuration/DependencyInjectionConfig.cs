@@ -32,6 +32,12 @@ namespace HumanResourcesManagementAPI.Configuration
             services.AddScoped<IRepositorySoftSkill, RepositorySoftSkill>();
             services.AddScoped<IRepository<TitoloDiStudio>, Repository<TitoloDiStudio>>();
             services.AddScoped<IRepositoryTitoloDiStudio, RepositoryTitoloDiStudio>();
+            services.AddScoped<IRepository<TipologiaColloquio>, Repository<TipologiaColloquio>>();
+            services.AddScoped<IRepositoryTipologiaColloquio, RepositoryTipologiaColloquio>();
+            services.AddScoped<IRepository<TipologiaContratto>, Repository<TipologiaContratto>>();
+            services.AddScoped<IRepositoryTipologiaContratto, RepositoryTipologiaContratto>();
+            services.AddScoped<IRepository<TipologiaDocumento>, Repository<TipologiaDocumento>>();
+            services.AddScoped<IRepositoryTipologiaDocumento, RepositoryTipologiaDocumento>();
 
         }
 
