@@ -6,7 +6,7 @@
         Task<T> Create(T entity);
         Task Update(T entity);
         Task DeleteById(int id);
-        Task<IEnumerable<T>> GetAll();
+        Task<List<T>> GetAll();
         Task<T?> GetById(int id);
 
     }

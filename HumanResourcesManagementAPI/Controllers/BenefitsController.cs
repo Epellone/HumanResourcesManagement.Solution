@@ -1,32 +1,32 @@
-﻿using HumanResourcesManagementAPI.Models.Interface;
-using Microsoft.AspNetCore.Http;
+﻿using HumanResourcesManagementAPI.Models.Classi;
+using HumanResourcesManagementAPI.Models.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HumanResourcesManagementAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class Controller<T> : ControllerBase where T: class
+    public class BenefitsController : ControllerBase
     {
-        private IRepository<T> repository;
+        private IRepositoryBenefits repository;
 
-        public Controller(IRepository<T> repository)
+        public BenefitsController(IRepositoryBenefits repository)
         {
             this.repository = repository;
         }
         [HttpPost]
-        public Task<T> Create(T entity)
+        public Task<Benefits> Create(Benefits entity)
         {
             return repository.Create(entity);
         }
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public  async Task<IActionResult> GetAll()
         {
             var result = await repository.GetAll();
             return Ok(result);
         }
         [HttpGet("{id:int}")]
-        public Task<T?> GetById(int id)
+        public Task<Benefits?> GetById(int id)
         {
             return repository.GetById(id);
         }

@@ -1,5 +1,7 @@
-using HumanResourcesManagementAPI.Models;
+using HumanResourcesManagementAPI.Configuration;
+using HumanResourcesManagementAPI.Controllers;
 using HumanResourcesManagementAPI.Models.Interface;
+using HumanResourcesManagementAPI.Repository;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,12 +13,14 @@ namespace HumanResourcesManagementAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(builder.Configuration.GetValue<string>("ConnectionString")));
             // Add services to the container.
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            DependencyInjectionConfig.Configure(builder.Services);
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin", builder =>
@@ -26,9 +30,6 @@ namespace HumanResourcesManagementAPI
                         .AllowAnyMethod();
                 });
             });
-
-            builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer(builder.Configuration.GetValue<string>("ConnectionString")));
-            builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
