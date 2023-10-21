@@ -1,40 +1,41 @@
 ﻿<h3>SoftSkills</h3>
 @page "/SoftSkills"
 
-<!DOCTYPE html>
-
-<head>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        table, td, th 
+        {
+            border: 1px solid black;
         }
 
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+        table 
+        {
+            border-collapse: collapse;
+            width: 40%;
         }
     </style>
-</head>
-<body>
-
-    
 
     <table>
         <tr>
-            <th>Descrizione</th>
+            <th>LEGENDA</th>
         </tr>
+
+        <tr>
+            <td>0</td>
+            <td>Nessuna competenza</td>
+        </tr>
+
+        <tr>
+            <td>1</td>
+            <td>Competenze parziali</td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>Può ricoprire tutte le posizioni</td>
+        </tr>
+
     </table>
 
-     <label for="scelta">Scegli: </label>
-    
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>
 
-</body>
+
 
