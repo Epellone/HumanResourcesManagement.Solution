@@ -1,41 +1,137 @@
 ﻿<h3>SoftSkills</h3>
 @page "/SoftSkills"
 
-    <style>
-        table, td, th 
-        {
-            border: 1px solid black;
-        }
 
-        table 
-        {
-            border-collapse: collapse;
-            width: 40%;
-        }
-    </style>
 
-    <table>
+@* <div>
+    <div class="row">
+        <div class="col-5">
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Team management</label>
+            </div>
+
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Lateral thinking</label>
+            </div>
+
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Teamwork</label>
+            </div>
+
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Leadershep</label>
+            </div>
+
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Problem solving</label>
+            </div>
+            
+        </div>
+    </div>
+</div> *@
+
+
+ <table class ="table">
+    <tbody>
+
         <tr>
-            <th>LEGENDA</th>
+            <td>Team management </td>
+            <td>
+                <div class="btn" role="group" aria-label="Scelta">
+                    <button type="button" class="btn btn-danger" onclick="selectOption('red')">0</button>
+                    <button type="button" class="btn btn-warning" onclick="selectOption('yellow')">1</button>
+                    <button type="button" class="btn btn-success" onclick="selectOption('green')">2</button>
+                </div>
+            </td>
         </tr>
 
         <tr>
-            <td>0</td>
-            <td>Nessuna competenza</td>
+            <td>Lateral thinking</td>
+            <td>
+               
+                <div class="btn" role="group" aria-label="Scelta">
+                    <button type="button" class="btn btn-danger" onclick="selectOption('red')">0</button>
+                    <button type="button" class="btn btn-warning" onclick="selectOption('yellow')">1</button>
+                    <button type="button" class="btn btn-success" onclick="selectOption('green')">2</button>
+                </div>
+            </td>
         </tr>
 
         <tr>
-            <td>1</td>
-            <td>Competenze parziali</td>
+            <td>Teamwork</td>
+            <td>
+                <div class="btn" role="group" aria-label="Scelta">
+                    <button type="button" class="btn btn-danger" onclick="selectOption('red')">0</button>
+
+                    <button type="button" class="btn btn-warning" onclick="selectOption('yellow')">1</button>
+
+                    <button type="button" class="btn btn-success" onclick="selectOption('green')">2</button>
+                </div>
+            </td>
         </tr>
 
         <tr>
-            <td>2</td>
-            <td>Può ricoprire tutte le posizioni</td>
+            <td>Leadershep</td>
+            <td>
+                <div class="btn" role="group" aria-label="Scelta">
+                    <button type="button" class="btn btn-danger" onclick="selectOption('red')">0</button>
+                    <button type="button" class="btn btn-warning" onclick="selectOption('yellow')">1</button>
+                    <button type="button" class="btn btn-success" onclick="selectOption('green')">2</button>
+                </div>
+            </td>
         </tr>
 
-    </table>
+        <tr>
+            <td>Problem solving</td>
+            <td>
+                <div class="btn" role="group" aria-label="Scelta">
+                    <button type="button" class="btn btn-danger" onclick="selectOption('red')">0</button>
+                    <button type="button" class="btn btn-warning" onclick="selectOption('yellow')">1</button>
+                    <button type="button" class="btn btn-success" onclick="selectOption('green')">2</button>
+                </div>
+            </td>
+        </tr>
+
+    </tbody>
+</table> 
 
 
 
+
+
+<table width="10%" border="1" align="center">
+
+    <tr>
+        <td bgcolor="#D2D2D2"></td>
+        <font-weight-bold>
+            <td bgcolor="#D2D2D2">LEGENDA </td>
+        </font-weight-bold>
+    </tr>
+
+    <tbody>
+        <tr>
+            <td bgcolor="DC3545">0 </td>
+            <td bgcolor="DC3545">Saturo</td>
+        </tr>
+
+        <tr>
+            <td bgcolor="FFC107">1</td>
+            <td bgcolor="FFC107">Parziale</td>
+        </tr>
+
+        <tr>
+            <td bgcolor="198754">2</td>
+            <td bgcolor="198754">Libero</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+      
 

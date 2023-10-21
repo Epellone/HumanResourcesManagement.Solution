@@ -6,10 +6,10 @@ namespace HumanResourcesManagementAPI.Models.Classi
     {
         public DateTime DataInizio { get; set; }
         public DateTime DataFine { get; set; }
-        public string Azienda { get; set; }
+        public string? Azienda { get; set; }
 
         [MaxLength(1000)]
-        public string Descrizione { get; set; }
+        public string? Descrizione { get; set; }
 
     }
 }
