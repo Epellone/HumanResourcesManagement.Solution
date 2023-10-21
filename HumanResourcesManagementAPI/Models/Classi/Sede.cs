@@ -13,7 +13,7 @@ namespace HumanResourcesManagementAPI.Models.Classi
         [EmailAddress(ErrorMessage = "Campo non valido")]
         public string EmailSede { get; set; }
 
-        public virtual ICollection<Sede_Dipendente> SedeDipendente { get; set; }
+        public virtual ICollection<Sede_Dipendente>? SedeDipendente { get; set; }
 
         // public Sede (Guid Sede, string indirizzo, string RecapitoTel, string EmailSede);
 
