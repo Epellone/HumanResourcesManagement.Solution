@@ -1,12 +1,11 @@
 ﻿using HumanResourcesManagementAPI.Models.Classi;
 using HumanResourcesManagementAPI.Models.Interface;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HumanResourcesManagementAPI.Controllers
 {
-    public class BenefitsController : Controller<Benefits>
+    public class TipologiaColloquioController : Controller<TipologiaColloquio>
     {
-        public BenefitsController(IRepository<Benefits> repository) : base(repository)
+        public TipologiaColloquioController(IRepository<TipologiaColloquio> repository) : base(repository)
         {
         }
     }

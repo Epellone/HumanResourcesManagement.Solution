@@ -12,8 +12,8 @@ namespace HumanResourcesManagementAPI.Models.Classi
         public string RecapitoTel { get; set; }
         [EmailAddress(ErrorMessage = "Campo non valido")]
         public string EmailSede { get; set; }
-        public int IDReferente { get; set; }
-        public virtual ICollection<Sede_Dipendente> SedeDipendente { get; set; }
+
+        public virtual ICollection<Sede_Dipendente>? SedeDipendente { get; set; }
 
         // public Sede (Guid Sede, string indirizzo, string RecapitoTel, string EmailSede);
 

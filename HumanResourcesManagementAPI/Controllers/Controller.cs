@@ -1,4 +1,5 @@
-﻿using HumanResourcesManagementAPI.Models.Interface;
+﻿using HumanResourcesManagementAPI.Migrations;
+using HumanResourcesManagementAPI.Models.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ namespace HumanResourcesManagementAPI.Controllers
         public Task<T> Create(T entity)
         {
             return repository.Create(entity);
+            
         }
         [HttpGet]
         public async Task<IActionResult> GetAll()
