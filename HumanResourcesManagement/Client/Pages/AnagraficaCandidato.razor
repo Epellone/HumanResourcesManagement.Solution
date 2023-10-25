@@ -15,8 +15,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
               <div class="modal-body">
-                    <form @onsubmit="AggiungiCandidato">
-                        <input type="text" @bind="nuovoCandidato.Nome" placeholder="Nome" /><br /><br />
+              <form @onsubmit="AggiungiCandidato">
+                    <input type="text" @bind="nuovoCandidato.Nome" placeholder="Nome" /><br /><br />
                     <input type="text" @bind="nuovoCandidato.Cognome" placeholder="Cognome" /><br /><br />
                     <input type="text" @bind="nuovoCandidato.RecapitoTelefonico" placeholder="Recapito Telefonico" /><br /><br />
                     <input type="text" @bind="nuovoCandidato.CF" placeholder="Codice Fiscale" /><br /><br />
@@ -26,7 +26,7 @@
                     <input type="text" @bind="nuovoCandidato.DataDiNascita" placeholder="Data Di Nascita" />
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                    <button  type="submit" class="btn btn-primary">Salva</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salva</button>
                 </div>
             </form>
           </div>
@@ -62,10 +62,9 @@
         <th>Data di nascita</th>
 
     </tr>
-
-@foreach (var candidato in listaCandidati)
-        {
-        @if (listaCandidati != null)
+@if (listaCandidati != null)
+    {
+        @foreach (var candidato in listaCandidati)
         {
             <tr>
                 <td>@candidato.Nome</td>
@@ -76,10 +75,10 @@
                 <td>@candidato.Comune</td>
                 <td>@candidato.Provincia</td>
                 <td>@candidato.DataDiNascita</td>
-            </tr>
-            }
-        }
 
+            </tr>
+        }
+    }
 </table>
 
 
