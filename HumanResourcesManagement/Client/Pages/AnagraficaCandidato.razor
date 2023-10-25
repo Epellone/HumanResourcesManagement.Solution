@@ -1,29 +1,40 @@
 ﻿@using HumanResourcesManagementAPI.Models
 @inject HttpClient HttpClient
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
-
-
-
-<h3>AnagraficaCandidato</h3>
+@inject IJSRuntime JS
 @page "/AnagraficaCandidato"
 
+<h3>AnagraficaCandidato</h3>
 
-<style>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Aggiungi Candidato</button>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Dati Candidato</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+              <div class="modal-body">
+                    <form @onsubmit="AggiungiCandidato">
+                        <input type="text" @bind="nuovoCandidato.Nome" placeholder="Nome" /><br /><br />
+                    <input type="text" @bind="nuovoCandidato.Cognome" placeholder="Cognome" /><br /><br />
+                    <input type="text" @bind="nuovoCandidato.RecapitoTelefonico" placeholder="Recapito Telefonico" /><br /><br />
+                    <input type="text" @bind="nuovoCandidato.CF" placeholder="Codice Fiscale" /><br /><br />
+                    <input type="text" @bind="nuovoCandidato.Email" placeholder="Email" /><br /><br />
+                    <input type="text" @bind="nuovoCandidato.Comune" placeholder="Comune" /><br /><br />
+                    <input type="text" @bind="nuovoCandidato.Provincia" placeholder="Provincia" /><br /><br />
+                    <input type="text" @bind="nuovoCandidato.DataDiNascita" placeholder="Data Di Nascita" />
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+                    <button  type="submit" class="btn btn-primary">Salva</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
 
-    th, td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-</style>
-
-
-<button type="button" @onclick="MostraFormAggiunta">Aggiungi Candidato</button>
-@if (mostraFormAggiunta)
+@*@if (mostraFormAggiunta)
 {
     <form @onsubmit="AggiungiCandidato">
         <input type="text" @bind="nuovoCandidato.Nome" placeholder="Nome" />
@@ -37,7 +48,7 @@
 
         <button type="submit">Salva</button>
     </form>
-}
+}*@
 
 <table>
     <tr>
@@ -52,21 +63,22 @@
 
     </tr>
 
-    @foreach (var candidato in listaCandidati)
-    {
-        <tr>
-            <td>@candidato.Nome</td>
-            <td>@candidato.Cognome</td>
-            <td>@candidato.RecapitoTelefonico</td>
-            <td>@candidato.CF</td>
-            <td>@candidato.Email</td>
-            <td>@candidato.Comune</td>
-            <td>@candidato.Provincia</td>
-            <td>@candidato.DataDiNascita</td>
-
-        </tr>
-
-    }
+@foreach (var candidato in listaCandidati)
+        {
+        @if (listaCandidati != null)
+        {
+            <tr>
+                <td>@candidato.Nome</td>
+                <td>@candidato.Cognome</td>
+                <td>@candidato.RecapitoTelefonico</td>
+                <td>@candidato.CF</td>
+                <td>@candidato.Email</td>
+                <td>@candidato.Comune</td>
+                <td>@candidato.Provincia</td>
+                <td>@candidato.DataDiNascita</td>
+            </tr>
+            }
+        }
 
 </table>
 
@@ -74,15 +86,15 @@
 
 
 @code {
-    private bool mostraFormAggiunta = false;
+    //private bool mostraFormAggiunta = false;
     private Candidato nuovoCandidato = new Candidato();
-    private List<Candidato> listaCandidati;
+    private List<Candidato>? listaCandidati;
 
 
-    private void MostraFormAggiunta()
-    {
-        mostraFormAggiunta = true;
-    }
+    //private void MostraFormAggiunta()
+    //{
+    //    mostraFormAggiunta = true;
+    //}
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,7 +124,7 @@
             listaCandidati.Add(candidatoCreato); 
 
             nuovoCandidato = new Candidato();
-            mostraFormAggiunta = false;
+            //mostraFormAggiunta = false;
 
             NavigationManager.NavigateTo("/AnagraficaCandidato");
         }
