@@ -6,34 +6,54 @@
 
 <h3>AnagraficaCandidato</h3>
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Aggiungi Candidato</button>
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Dati Candidato</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-              <div class="modal-body">
-              <form @onsubmit="AggiungiCandidato">
-                    <input type="text" @bind="nuovoCandidato.Nome" placeholder="Nome" /><br /><br />
-                    <input type="text" @bind="nuovoCandidato.Cognome" placeholder="Cognome" /><br /><br />
-                    <input type="text" @bind="nuovoCandidato.RecapitoTelefonico" placeholder="Recapito Telefonico" /><br /><br />
-                    <input type="text" @bind="nuovoCandidato.CF" placeholder="Codice Fiscale" /><br /><br />
-                    <input type="text" @bind="nuovoCandidato.Email" placeholder="Email" /><br /><br />
-                    <input type="text" @bind="nuovoCandidato.Comune" placeholder="Comune" /><br /><br />
-                    <input type="text" @bind="nuovoCandidato.Provincia" placeholder="Provincia" /><br /><br />
-                    <input type="text" @bind="nuovoCandidato.DataDiNascita" placeholder="Data Di Nascita" />
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
-                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Salva</button>
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale" >Aggiungi Candidato</button>
+@if (mostraFinestraModale)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati Candidato</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
                 </div>
-            </form>
-          </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiCandidato">
+                        Nome <input type="text" @bind="nuovoCandidato.Nome" required/><br /><br/>
+                        Cognome <input type="text" @bind="nuovoCandidato.Cognome" required/><br /><br />
+                        Codice Fiscale <input type="text" @bind="nuovoCandidato.CF" required /><br /><br />
+                        Data Di Nascita <input type="date" @bind="nuovoCandidato.DataDiNascita" required /><br /><br />
+                        Email <input type="text" @bind="nuovoCandidato.Email" required /><br /><br />
+                        Recapito Telefonico <input type="text" @bind="nuovoCandidato.RecapitoTelefonico" required /><br /><br />
+                        Comune <input type="text" @bind="nuovoCandidato.Comune" required /><br /><br />
+                        Provincia <input type="text" @bind="nuovoCandidato.Provincia" required /><br /><br />
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+}
 
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Il candidato è stato aggiunto con successo!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 @*@if (mostraFormAggiunta)
 {
     <form @onsubmit="AggiungiCandidato">
@@ -85,15 +105,26 @@
 
 
 @code {
-    //private bool mostraFormAggiunta = false;
+    private bool chiusurafinestra = false;
+    private bool mostraFinestraModale = false;
+    private bool mostraMessaggio = false;
     private Candidato nuovoCandidato = new Candidato();
     private List<Candidato>? listaCandidati;
 
+    private void ApriFinestraModale()
+    {
+        mostraFinestraModale = true;
+    }
 
-    //private void MostraFormAggiunta()
-    //{
-    //    mostraFormAggiunta = true;
-    //}
+    private void ChiudiFinestraModale()
+    {
+        mostraFinestraModale = false;
+    }   
+
+    private void ChiudiMessaggio()
+    {
+        mostraMessaggio = false;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -113,24 +144,39 @@
         }
 
     }
+
     private async Task AggiungiCandidato()
     {
-        var response = await HttpClient.PostAsJsonAsync("api/Candidato", nuovoCandidato);
-
-        if (response.IsSuccessStatusCode)
+        if (IsValid(nuovoCandidato))
         {
-            var candidatoCreato = await response.Content.ReadFromJsonAsync<Candidato>();
-            listaCandidati.Add(candidatoCreato); 
+            var response = await HttpClient.PostAsJsonAsync("api/Candidato", nuovoCandidato);
 
-            nuovoCandidato = new Candidato();
-            //mostraFormAggiunta = false;
-
-            NavigationManager.NavigateTo("/AnagraficaCandidato");
+            if (response.IsSuccessStatusCode)
+            {
+                var candidatoCreato = await response.Content.ReadFromJsonAsync<Candidato>();
+                if (listaCandidati != null && candidatoCreato != null)
+                {
+                    listaCandidati.Add(candidatoCreato);
+                    nuovoCandidato = new Candidato();
+                    mostraFinestraModale = false;
+                    mostraMessaggio = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'aggiunta del candidato.");
+            }
         }
-        else
-        {
+    }
 
-            Console.WriteLine("Errore durante l'aggiunta del candidato.");
-        }
+    private bool IsValid(Candidato candidato)
+    {
+        return !string.IsNullOrWhiteSpace(candidato.Nome)
+            && !string.IsNullOrWhiteSpace(candidato.Cognome)
+            && !string.IsNullOrWhiteSpace(candidato.CF)
+            && !string.IsNullOrWhiteSpace(candidato.Email)
+            && !string.IsNullOrWhiteSpace(candidato.Provincia)
+            && !string.IsNullOrWhiteSpace(candidato.Comune)
+            && !string.IsNullOrWhiteSpace(candidato.RecapitoTelefonico);
     }
 }
