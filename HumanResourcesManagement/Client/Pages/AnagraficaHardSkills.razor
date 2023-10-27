@@ -6,7 +6,7 @@
 <h3>HardSkills</h3>
 
 
-<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi </button>
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale"> Aggiungi Hard Skill </button>
 @if (mostraFinestraModale)
 {
     <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
@@ -18,10 +18,8 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiHardSkill">
-                        Candidato <input type="text" class="form-control" @bind="nuovaHardSkill.Candidato" required /><br />
                         Descrizione <input type="text" class="form-control" @bind="nuovaHardSkill.Descrizione" required /><br />
                         
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -33,6 +31,10 @@
         </div>
     </div>
 }
+<table>
+    <tr>
+        <th>Descrizione</th>
+    </tr>
 
 @if (mostraMessaggio)
 {
@@ -44,26 +46,21 @@
                     <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>L'HardSkills è stata aggiunta con successo!</p>
+                    <p>L'HardSkill è stata aggiunta con successo!</p>
                 </div>
             </div>
         </div>
     </div>
 }
 
-<table>
-    <tr>
-        <th>Candidato</th>
-        <th>Descrizione</th>
-    </tr>
+
 
     @if (listaHardSkill != null)
 
-        @foreach (var sede in listaHardSkill)
+        @foreach (var hardSkill in listaHardSkill)
         {
             <tr>
-                <td>@sede.Candidato</td>
-                <td>@sede.Descrizione</td>
+                <td>@hardSkill.Descrizione</td>
             </tr>
         }
 </table>
@@ -135,8 +132,7 @@
 
     private bool IsValid(HardSkill hardskill)
     {
-        return !string.IsNullOrWhiteSpace(hardskill.Candidato)
-            && !string.IsNullOrWhiteSpace(hardskill.Descrizione);
+        return  !string.IsNullOrWhiteSpace(hardskill.Descrizione);
     }
 }
 

@@ -18,7 +18,7 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiTitoliDiStudio">
-                        Descrizione <input type="text" class="form-control" @bind="nuovoTitoliDiStudio.Descrizione" required /><br />
+                        Descrizione <input type="text" class="form-control" @bind="nuovoTitoloDiStudio.Descrizione" required /><br />
 
 
                         <div class="modal-footer">
@@ -85,8 +85,8 @@
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TitoliDiStudio nuovoTitoliDiStudio = new TitoliDiStudio();
-    private List<TitoliDiStudio>? listaTitoliDiStudio;
+    private TitoloDiStudio nuovoTitoloDiStudio = new TitoloDiStudio();
+    private List<TitoloDiStudio>? listaTitoliDiStudio;
 
     private void ApriFinestraModale()
     {
@@ -113,7 +113,7 @@
     {
         try
         {
-            listaTitoliDiStudio = await HttpClient.GetFromJsonAsync<List<TitoliDiStudio>>("api/TitoliDiStudio");
+            listaTitoliDiStudio = await HttpClient.GetFromJsonAsync<List<TitoloDiStudio>>("api/TitoloDiStudio");
         }
         catch (HttpRequestException)
         {
@@ -124,17 +124,17 @@
 
     private async Task AggiungiTitoliDiStudio()
     {
-        if (IsValid(nuovoTitoliDiStudio))
+        if (IsValid(nuovoTitoloDiStudio))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoliDiStudio);
+            var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoloDiStudio);
 
             if (response.IsSuccessStatusCode)
             {
-                var titolidistudioCreato = await response.Content.ReadFromJsonAsync<TitoliDiStudio>();
+                var titolidistudioCreato = await response.Content.ReadFromJsonAsync<TitoloDiStudio>();
                 if (listaTitoliDiStudio != null && titolidistudioCreato != null)
                 {
                     listaTitoliDiStudio.Add(titolidistudioCreato);
-                    nuovoTitoliDiStudio = new TitoliDiStudio();
+                    nuovoTitoloDiStudio = new TitoloDiStudio();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
@@ -146,8 +146,8 @@
         }
     }
 
-    private bool IsValid(TitoliDiStudio titolodistudio)
+    private bool IsValid(TitoloDiStudio titoloDiStudio)
     {
-        return !string.IsNullOrWhiteSpace(TitoliDiStudio.Descrizione);
+        return !string.IsNullOrWhiteSpace(titoloDiStudio.Descrizione);
     }
 }

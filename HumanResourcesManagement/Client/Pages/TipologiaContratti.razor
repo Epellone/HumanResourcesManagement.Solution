@@ -31,20 +31,9 @@
     </div>
 }
 
-<table>
-    <tr>
-        <th>Descrizione</th>
-    </tr>
-</table>
 
-<label for="scelta">Scegli: </label>
 
-<div class="container mt-3">
-    <div class="btn-group" role="group" aria-label="Scelta">
-        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-    </div>
-</div>
+
 
 
 @if (mostraMessaggio)
@@ -72,10 +61,10 @@
 
     @if (listaTipologiaContratti != null)
 
-        @foreach (var sede in listaTipologiaContratti)
+        @foreach (var tipologiaContratto in listaTipologiaContratti)
         {
             <tr>
-                <td>@sede.Descrizione</td>
+                <td>@tipologiaContratto.Descrizione</td>
             </tr>
         }
 </table>
@@ -84,8 +73,8 @@
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TipologiaContratti nuovaTipologiaContratti = new TipologiaContratti();
-    private List<TipologiaContratti>? listaTipologiaContratti;
+    private TipologiaContratto nuovaTipologiaContratti = new TipologiaContratto();
+    private List<TipologiaContratto>? listaTipologiaContratti;
 
     private void ApriFinestraModale()
     {
@@ -112,7 +101,7 @@
     {
         try
         {
-            listaTipologiaContratti = await HttpClient.GetFromJsonAsync<List<TipologiaContratti>>("api/TipologiaContratti");
+            listaTipologiaContratti = await HttpClient.GetFromJsonAsync<List<TipologiaContratto>>("api/TipologiaContratti");
         }
         catch (HttpRequestException)
         {
@@ -129,11 +118,11 @@
 
             if (response.IsSuccessStatusCode)
             {
-                var tipologiacontrattiCreato = await response.Content.ReadFromJsonAsync<TipologiaContratti>();
+                var tipologiacontrattiCreato = await response.Content.ReadFromJsonAsync<TipologiaContratto>();
                 if (listaTipologiaContratti != null && tipologiacontrattiCreato != null)
                 {
                     listaTipologiaContratti.Add(tipologiacontrattiCreato);
-                    nuovaTipologiaContratti = new TipologiaContratti();
+                    nuovaTipologiaContratti = new TipologiaContratto();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
@@ -145,9 +134,9 @@
         }
     }
 
-    private bool IsValid(TipologiaContratti tipologiacontratti)
+    private bool IsValid(TipologiaContratto tipologiaContratto)
     {
-        return !string.IsNullOrWhiteSpace(tipologiacontratti.Descrizione);
+        return !string.IsNullOrWhiteSpace(tipologiaContratto.Descrizione);
     }
 }
 
