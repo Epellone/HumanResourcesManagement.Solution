@@ -18,14 +18,14 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiCandidato">
-                        Nome <input type="text" @bind="nuovoCandidato.Nome" required/><br /><br/>
-                        Cognome <input type="text" @bind="nuovoCandidato.Cognome" required/><br /><br />
-                        Codice Fiscale <input type="text" @bind="nuovoCandidato.CF" required /><br /><br />
-                        Data Di Nascita <input type="date" @bind="nuovoCandidato.DataDiNascita" required /><br /><br />
-                        Email <input type="text" @bind="nuovoCandidato.Email" required /><br /><br />
-                        Recapito Telefonico <input type="text" @bind="nuovoCandidato.RecapitoTelefonico" required /><br /><br />
-                        Comune <input type="text" @bind="nuovoCandidato.Comune" required /><br /><br />
-                        Provincia <input type="text" @bind="nuovoCandidato.Provincia" required /><br /><br />
+                        Nome <input type="text" class="form-control" @bind="nuovoCandidato.Nome" required /><br />
+                        Cognome <input type="text" class="form-control" @bind="nuovoCandidato.Cognome" required /><br />
+                        Codice Fiscale <input type="text" class="form-control" @bind="nuovoCandidato.CF" required /><br />
+                        Data Di Nascita <input type="date" class="form-control" @bind="nuovoCandidato.DataDiNascita" required /><br />
+                        Email <input type="text" class="form-control" @bind="nuovoCandidato.Email" required /><br />
+                        Recapito Telefonico <input type="text" class="form-control" @bind="nuovoCandidato.RecapitoTelefonico" required /><br />
+                        Comune <input type="text" class="form-control" @bind="nuovoCandidato.Comune" required /><br />
+                        Provincia <input type="text" class="form-control" @bind="nuovoCandidato.Provincia" required /><br />
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -83,7 +83,7 @@
 
     </tr>
 @if (listaCandidati != null)
-    {
+    
         @foreach (var candidato in listaCandidati)
         {
             <tr>
@@ -98,11 +98,8 @@
 
             </tr>
         }
-    }
+    
 </table>
-
-
-
 
 @code {
     private bool chiusurafinestra = false;

@@ -1,7 +1,151 @@
 ﻿<h3>Mansioni</h3>
 @page "/Mansioni"
+@using HumanResourcesManagementAPI.Models
+@inject HttpClient HttpClient
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@inject IJSRuntime JS
 
-    <table>
+
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Mansione</button>
+@if (mostraFinestraModale)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati Mansione</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiMansione">
+                        Descrizione <input type="text" class="form-control" @bind="nuovaMansione.Descrizione" required /><br />
+                        
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>La mansione è stata aggiunta con successo!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<table>
+    <tr>
+        <th>Descrizione</th>
+    </tr>
+
+    @if (listaMansioni != null)
+
+        @foreach (var mansione in listaMansioni)
+        {
+            <tr>
+                <td>@mansione.Descrizione</td>
+            </tr>
+        }
+</table>
+
+@code
+{
+    private bool mostraFinestraModale = false;
+    private bool mostraMessaggio = false;
+    private Mansione nuovaMansione = new Mansione();
+    private List<Mansione>? listaMansioni;
+
+    private void ApriFinestraModale()
+    {
+        mostraFinestraModale = true;
+    }
+
+    private void ChiudiFinestraModale()
+    {
+        mostraFinestraModale = false;
+    }
+
+    private void ChiudiMessaggio()
+    {
+        mostraMessaggio = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        try
+        {
+            listaMansioni = await HttpClient.GetFromJsonAsync<List<Mansione>>("api/Mansione");
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
+
+    }
+
+    private async Task AggiungiSede()
+    {
+        if (IsValid(nuovaMansione))
+        {
+            var response = await HttpClient.PostAsJsonAsync("api/Mansione", nuovaMansione);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var mansioneCreato = await response.Content.ReadFromJsonAsync<Mansione>();
+                if (listaMansioni != null && mansioneCreato != null)
+                {
+                    listaMansioni.Add(mansioneCreato);
+                    nuovaMansione = new Mansione();
+                    mostraFinestraModale = false;
+                    mostraMessaggio = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'aggiunta della mansione.");
+            }
+        }
+    }
+
+    private bool IsValid(Mansione mansione)
+    {
+        return !string.IsNullOrWhiteSpace(mansione.Descrizione);
+
+    }
+}
+
+
+
+
+
+
+
+
+
+<table>
         <tr>
             <th>Descrizioni</th>
         </tr>

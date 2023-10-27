@@ -1,5 +1,153 @@
-﻿<h3>HardSkills</h3>
-@page "/HardSkills"
+﻿@page "/HardSkills"
+@using HumanResourcesManagementAPI.Models
+@inject HttpClient HttpClient
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+<h3>HardSkills</h3>
+
+
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi </button>
+@if (mostraFinestraModale)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hard Skills</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiHardSkill">
+                        Candidato <input type="text" class="form-control" @bind="nuovaHardSkill.Candidato" required /><br />
+                        Descrizione <input type="text" class="form-control" @bind="nuovaHardSkill.Descrizione" required /><br />
+                        
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>L'HardSkills è stata aggiunta con successo!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<table>
+    <tr>
+        <th>Candidato</th>
+        <th>Descrizione</th>
+    </tr>
+
+    @if (listaHardSkill != null)
+
+        @foreach (var sede in listaHardSkill)
+        {
+            <tr>
+                <td>@sede.Candidato</td>
+                <td>@sede.Descrizione</td>
+            </tr>
+        }
+</table>
+
+@code
+{
+    private bool mostraFinestraModale = false;
+    private bool mostraMessaggio = false;
+    private HardSkill nuovaHardSkill = new HardSkill();
+    private List<HardSkill>? listaHardSkill;
+
+    private void ApriFinestraModale()
+    {
+        mostraFinestraModale = true;
+    }
+
+    private void ChiudiFinestraModale()
+    {
+        mostraFinestraModale = false;
+    }
+
+    private void ChiudiMessaggio()
+    {
+        mostraMessaggio = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        try
+        {
+            listaHardSkill = await HttpClient.GetFromJsonAsync<List<HardSkill>>("api/HardSkill");
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
+
+    }
+
+    private async Task AggiungiHardSkill()
+    {
+        if (IsValid(nuovaHardSkill))
+        {
+            var response = await HttpClient.PostAsJsonAsync("api/HardSkill", nuovaHardSkill);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var HardSkillCreato = await response.Content.ReadFromJsonAsync<HardSkill>();
+                if (listaHardSkill != null && HardSkillCreato != null)
+                {
+                    listaHardSkill.Add(HardSkillCreato);
+                    nuovaHardSkill = new HardSkill();
+                    mostraFinestraModale = false;
+                    mostraMessaggio = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'aggiunta dell'Hard Skill.");
+            }
+        }
+    }
+
+    private bool IsValid(HardSkill hardskill)
+    {
+        return !string.IsNullOrWhiteSpace(hardskill.Candidato)
+            && !string.IsNullOrWhiteSpace(hardskill.Descrizione);
+    }
+}
+
+
+
+
+
+
+
+
 
 @* <!DOCTYPE html>
 <html>
@@ -85,7 +233,7 @@
 
 </table> *@
 
-
+@* 
 
 <table width="20%" border="1" align="center">
     <tr>
@@ -144,3 +292,4 @@
         </div>
     </div>
 </div>
+ *@
