@@ -1,24 +1,25 @@
-﻿<h3>Mansioni</h3>
-@page "/Mansioni"
+﻿<h3>LivelliContrattuali</h3>
+@page "/LivelliContrattuali"
 @using HumanResourcesManagementAPI.Models
 @inject HttpClient HttpClient
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @inject IJSRuntime JS
 
 
-<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Mansione</button>
+
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Livello Contrattuale</button>
 @if (mostraFinestraModale)
 {
     <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati Mansione</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Livello Contrattuale</h1>
                     <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form @onsubmit="AggiungiMansione">
-                        Descrizione <input type="text" class="form-control" @bind="nuovaMansione.Descrizione" required /><br />
+                    <form @onsubmit="AggiungiLivelloContrattuale">
+                        Descrizione <input type="text" class="form-control" @bind="nuovoLivelloContrattuale.Descrizione" required /><br />
                         
 
                         <div class="modal-footer">
@@ -43,7 +44,7 @@
                     <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>La mansione è stata aggiunta con successo!</p>
+                    <p>Il livello contrattuale è stato aggiunto con successo!</p>
                 </div>
             </div>
         </div>
@@ -55,22 +56,38 @@
         <th>Descrizione</th>
     </tr>
 
-    @if (listaMansioni != null)
+    @if (listaLivelloContrattuale != null)
 
-        @foreach (var mansione in listaMansioni)
+        @foreach (var sede in listaLivelloContrattuale)
         {
             <tr>
-                <td>@mansione.Descrizione</td>
+                <td>@sede.Descrizione</td>
+                
             </tr>
         }
 </table>
+
+
+<table>
+        <tr>
+            <th>Descrizione</th>
+        </tr>
+    </table>
+
+     <label for="scelta">Scegli: </label>
+    <div class="container mt-3">
+        <div class="btn-group" role="group" aria-label="Scelta">
+            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+        </div>
+    </div>
 
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private Mansione nuovaMansione = new Mansione();
-    private List<Mansione>? listaMansioni;
+    private LivelloContrattuale nuovoLivelloContrattuale = new LivelloContrattuale();
+    private List<LivelloContrattuale>? listaLivelloContrattuale;
 
     private void ApriFinestraModale()
     {
@@ -97,7 +114,7 @@
     {
         try
         {
-            listaMansioni = await HttpClient.GetFromJsonAsync<List<Mansione>>("api/Mansione");
+            listaLivelloContrattuale = await HttpClient.GetFromJsonAsync<List<LivelloContrattuale>>("api/LivelloContrattuale");
         }
         catch (HttpRequestException)
         {
@@ -106,33 +123,33 @@
 
     }
 
-    private async Task AggiungiSede()
+    private async Task AggiungiLivelloContrattuale()
     {
-        if (IsValid(nuovaMansione))
+        if (IsValid(nuovoLivelloContrattuale))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/Mansione", nuovaMansione);
+            var response = await HttpClient.PostAsJsonAsync("api/LivelloContrattuale", nuovoLivelloContrattuale);
 
             if (response.IsSuccessStatusCode)
             {
-                var mansioneCreato = await response.Content.ReadFromJsonAsync<Mansione>();
-                if (listaMansioni != null && mansioneCreato != null)
+                var LivelloCreato = await response.Content.ReadFromJsonAsync<LivelloContrattuale>();
+                if (listaLivelloContrattuale != null && LivelloCreato != null)
                 {
-                    listaMansioni.Add(mansioneCreato);
-                    nuovaMansione = new Mansione();
+                    listaLivelloContrattuale.Add(LivelloCreato);
+                    nuovoLivelloContrattuale = new LivelloContrattuale();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
             }
             else
             {
-                Console.WriteLine("Errore durante l'aggiunta della mansione.");
+                Console.WriteLine("Errore durante l'aggiunta del livello contrattuale.");
             }
         }
     }
 
-    private bool IsValid(Mansione mansione)
+    private bool IsValid(LivelloContrattuale livelloContrattuale)
     {
-        return !string.IsNullOrWhiteSpace(mansione.Descrizione);
+        return !string.IsNullOrWhiteSpace(livelloContrattuale.Descrizione);
 
     }
 }
@@ -140,23 +157,4 @@
 
 
 
-
-
-
-
-
-<table>
-        <tr>
-            <th>Descrizioni</th>
-        </tr>
-    </table>
-
-     <label for="scelta">Scegli: </label>
-    
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>
 

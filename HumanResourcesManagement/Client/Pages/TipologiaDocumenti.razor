@@ -18,7 +18,7 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiTipologiaDocumenti">
-                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaDocumenti.Descrizione" required /><br />
+                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaDocumento.Descrizione" required /><br />
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -64,12 +64,29 @@
         }
 </table>
 
+
+<table>
+    <tr>
+        <th>Descrizione</th>
+    </tr>
+</table>
+
+<label for="scelta">Scegli: </label>
+
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
+
+
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TipologiaDocumenti nuovaTipologiaDocumenti = new TipologiaDocumenti();
-    private List<TipologiaDocumenti>? listaTipologiaDocumenti;
+    private TipologiaDocumento nuovaTipologiaDocumento = new TipologiaDocumento();
+    private List<TipologiaDocumento>? listaTipologiaDocumenti;
 
     private void ApriFinestraModale()
     {
@@ -96,7 +113,7 @@
     {
         try
         {
-            listaTipologiaDocumenti = await HttpClient.GetFromJsonAsync<List<TipologiaDocumenti>>("api/TipologiaDocumenti");
+            listaTipologiaDocumenti = await HttpClient.GetFromJsonAsync<List<TipologiaDocumento>>("api/TipologiaDocumento");
         }
         catch (HttpRequestException)
         {
@@ -107,17 +124,17 @@
 
     private async Task AggiungiTipologiaDocumenti()
     {
-        if (IsValid(nuovaTipologiaDocumenti))
+        if (IsValid(nuovaTipologiaDocumento))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TipologiaDocumenti", nuovaTipologiaDocumenti);
+            var response = await HttpClient.PostAsJsonAsync("api/TipologiaDocumento", nuovaTipologiaDocumento);
 
             if (response.IsSuccessStatusCode)
             {
-                var tipologiadocumentiCreato = await response.Content.ReadFromJsonAsync<TipologiaDocumenti>();
+                var tipologiadocumentiCreato = await response.Content.ReadFromJsonAsync<TipologiaDocumento>();
                 if (listaTipologiaDocumenti != null && tipologiadocumentiCreato != null)
                 {
                     listaTipologiaDocumenti.Add(tipologiadocumentiCreato);
-                    nuovaTipologiaDocumenti = new TipologiaDocumenti();
+                    nuovaTipologiaDocumento = new TipologiaDocumento();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
@@ -129,9 +146,9 @@
         }
     }
 
-    private bool IsValid(TipologiaDocumenti tipologiadocumenti)
+    private bool IsValid(TipologiaDocumento tipologiaDocumenti)
     {
-        return !string.IsNullOrWhiteSpace(tipologiadocumenti.Descrizione);
+        return !string.IsNullOrWhiteSpace(tipologiaDocumenti.Descrizione);
     }
 }
 
@@ -141,18 +158,3 @@
 
 
 
-
-    <table>
-        <tr>
-            <th>Descrizione</th>
-        </tr>
-    </table>
-
-    <label for="scelta">Scegli: </label>
-
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>

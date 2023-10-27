@@ -23,7 +23,7 @@
                         Data Colloquio <input type="text" class="form-control" @bind="nuovoColloquio.DataColloquio" required /><br />
                         Sede ColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.SedeColloquioID" required /><br />
                         Sede <input type="text" class="form-control" @bind="nuovoColloquio.Sede" required /><br />
-                        DipendenteColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.DipendendenteColloquioID" required /><br />
+                        @*DipendenteColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.DipendendenteColloquioID" required /><br />*@
                         Dipendente <input type="text" class="form-control" @bind="nuovoColloquio.Dipendente" required /><br />
                         TipologiaColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.TipologiaColloquioID" required /><br />
                         TipologiaColloquio <input type="text" class="form-control" @bind="nuovoColloquio.TipologiaColloquio" required /><br />
@@ -135,8 +135,7 @@
 
     private async Task AggiungiColloquio()
     {
-        if (IsValid(nuovoColloquio))
-        {
+       
             var response = await HttpClient.PostAsJsonAsync("api/Colloquio", nuovoColloquio);
 
             if (response.IsSuccessStatusCode)
@@ -144,7 +143,7 @@
                 var colloquioCreato = await response.Content.ReadFromJsonAsync<Colloquio>();
                 if (listaColloqui != null && colloquioCreato != null)
                 {
-                    listaColloqui.Add(ColloquioCreato);
+                    listaColloqui.Add(colloquioCreato);
                     nuovoColloquio = new Colloquio();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
@@ -154,20 +153,20 @@
             {
                 Console.WriteLine("Errore durante l'aggiunta del colloquio.");
             }
-        }
+   
     }
 
-    // private bool IsValid(Colloquio colloquio)
-    // {
-    //     return !string.IsNullOrWhiteSpace(colloquio.DataColloquio)
-    //         && !string.IsNullOrWhiteSpace(colloquio.SedeColloquioID)
-    //         && !string.IsNullOrWhiteSpace(colloquio.Sede)
-    //         && !string.IsNullOrWhiteSpace(colloquio.DipendenteColloquioID)
-    //         && !string.IsNullOrWhiteSpace(colloquio.Dipendente)
-    //         && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquio)
-    //         && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquioID)
-    //         && !string.IsNullOrWhiteSpace(colloquio.Candidato)
-    //         && !string.IsNullOrWhiteSpace(colloquio.CandidatoID)
-    //         && !string.IsNullOrWhiteSpace(colloquio.Note);
-    // }
+     //private bool IsValid(Colloquio colloquio)
+     //{
+     //    return !string.IsNullOrWhiteSpace(colloquio.DataColloquio)
+     //        && !string.IsNullOrWhiteSpace(colloquio.SedeColloquioID)
+     //        && !string.IsNullOrWhiteSpace(colloquio.Sede)
+     //        && !string.IsNullOrWhiteSpace(colloquio.DipendenteColloquioID)
+     //        && !string.IsNullOrWhiteSpace(colloquio.Dipendente)
+     //        && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquio)
+     //        && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquioID)
+     //        && !string.IsNullOrWhiteSpace(colloquio.Candidato)
+     //        && !string.IsNullOrWhiteSpace(colloquio.CandidatoID)
+     //        && !string.IsNullOrWhiteSpace(colloquio.Note);
+     //}
 }

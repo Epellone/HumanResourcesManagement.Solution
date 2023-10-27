@@ -18,7 +18,7 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiTitoliDiStudio">
-                        Descrizione <input type="text" class="form-control" @bind="nuovoTitoliDiStudio.Descrizione" required /><br />
+                        Descrizione <input type="text" class="form-control" @bind="nuovoTitoloDiStudio.Descrizione" required /><br />
 
 
                         <div class="modal-footer">
@@ -61,7 +61,7 @@
         @foreach (var titolodistudio in listaTitoliDiStudio)
         {
             <tr>
-                <td>@titoliditudio.Descrizione</td>
+                <td>@titolodistudio.Descrizione</td>
             </tr>
         }
 </table>
@@ -70,8 +70,8 @@
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TitoliDiStudio nuovoTitoliDiStudio = new TitoliDiStudio();
-    private List<TitoliDiStudio>? listaTitoliDiStudio;
+    private TitoloDiStudio nuovoTitoloDiStudio = new TitoloDiStudio();
+    private List<TitoloDiStudio>? listaTitoliDiStudio;
 
     private void ApriFinestraModale()
     {
@@ -98,7 +98,7 @@
     {
         try
         {
-            listaTitoliDiStudio = await HttpClient.GetFromJsonAsync<List<TitoliDiStudio>>("api/TitoliDiStudio");
+            listaTitoliDiStudio = await HttpClient.GetFromJsonAsync<List<TitoloDiStudio>>("api/TitoloDiStudio");
         }
         catch (HttpRequestException)
         {
@@ -109,17 +109,17 @@
 
     private async Task AggiungiTitoliDiStudio()
     {
-        if (IsValid(nuovaTitoliDiStudio))
+        if (IsValid(nuovoTitoloDiStudio))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoliDiStudio);
+            var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoloDiStudio);
 
             if (response.IsSuccessStatusCode)
             {
-                var titolidistudioCreato = await response.Content.ReadFromJsonAsync<TitoliDiStudio>();
-                if (listaTitoliDiStudio != null && titolidistudioCreato != null)
+                var titoliDiStudioCreato = await response.Content.ReadFromJsonAsync<TitoloDiStudio>();
+                if (listaTitoliDiStudio != null && titoliDiStudioCreato != null)
                 {
-                    listaTitoliDiStudio.Add(titolidistudioCreato);
-                    nuovaTitoliDiStudio = new TitoliDiStudio();
+                    listaTitoliDiStudio.Add(titoliDiStudioCreato);
+                    nuovoTitoloDiStudio = new TitoloDiStudio();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
@@ -131,9 +131,9 @@
         }
     }
 
-    private bool IsValid(TitoloDiStudio titolodistudio)
+    private bool IsValid(TitoloDiStudio titoloDiStudio)
     {
-        return !string.IsNullOrWhiteSpace(TitoloDiStudio.Descrizione);
+        return !string.IsNullOrWhiteSpace(titoloDiStudio.Descrizione);
     }
 }
 

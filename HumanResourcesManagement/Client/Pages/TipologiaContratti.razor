@@ -18,7 +18,7 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiTipologiaContratti">
-                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaContratti.Descrizione" required /><br />
+                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaContratto.Descrizione" required /><br />
 
 
                         <div class="modal-footer">
@@ -66,12 +66,27 @@
         }
 </table>
 
+<table>
+    <tr>
+        <th>Descrzione</th>
+    </tr>
+</table>
+
+<label for="scelta">Scegli: </label>
+
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
+
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TipologiaContratti nuovaTipologiaContratti = new TipologiaContratti();
-    private List<TipologiaContratti>? listaTipologiaContratti;
+    private TipologiaContratto nuovaTipologiaContratto = new TipologiaContratto();
+    private List<TipologiaContratto>? listaTipologiaContratti;
 
     private void ApriFinestraModale()
     {
@@ -98,7 +113,7 @@
     {
         try
         {
-            listaTipologiaContratti = await HttpClient.GetFromJsonAsync<List<TipologiaContratti>>("api/TipologiaContratti");
+            listaTipologiaContratti = await HttpClient.GetFromJsonAsync<List<TipologiaContratto>>("api/TipologiaContratto");
         }
         catch (HttpRequestException)
         {
@@ -109,17 +124,17 @@
 
     private async Task AggiungiTipologiaContratti()
     {
-        if (IsValid(nuovaTipologiaContratti))
+        if (IsValid(nuovaTipologiaContratto))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TipologiaContratti", nuovaTipologiaContratti);
+            var response = await HttpClient.PostAsJsonAsync("api/TipologiaContratto", nuovaTipologiaContratto);
 
             if (response.IsSuccessStatusCode)
             {
-                var tipologiacontrattiCreato = await response.Content.ReadFromJsonAsync<TipologiaContratti>();
+                var tipologiacontrattiCreato = await response.Content.ReadFromJsonAsync<TipologiaContratto>();
                 if (listaTipologiaContratti != null && tipologiacontrattiCreato != null)
                 {
                     listaTipologiaContratti.Add(tipologiacontrattiCreato);
-                    nuovaTipologiaContratti = new TipologiaContratti();
+                    nuovaTipologiaContratto = new TipologiaContratto();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
@@ -131,27 +146,13 @@
         }
     }
 
-    private bool IsValid(TipologiaContratti tipologiacontratti)
+    private bool IsValid(TipologiaContratto tipologiaContratto)
     {
-        return !string.IsNullOrWhiteSpace(tipologiacontratti.Descrizione);
+        return !string.IsNullOrWhiteSpace(tipologiaContratto.Descrizione);
     }
 }
 
 
 
 
-    <table>
-        <tr>
-            <th>Descrzione</th>
-        </tr>
-    </table>
-
-    <label for="scelta">Scegli: </label>
-
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>
 

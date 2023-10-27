@@ -1,5 +1,5 @@
 ﻿<h3>SoftSkills</h3>
-@page "/SoftSkills"
+@page "/AnagraficaSoftSkills"
 @using HumanResourcesManagementAPI.Models
 @inject HttpClient HttpClient
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
@@ -18,7 +18,7 @@
                     <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form @onsubmit="AggiungiSofSkills">
+                    <form @onsubmit="AggiungiSoftSkill">
                         Descrizione <input type="text" class="form-control" @bind="nuovaSoftSkill.Descrizione" required /><br />
                         
 
@@ -73,7 +73,7 @@
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
     private SoftSkill nuovaSoftSkill = new SoftSkill();
-    private List<SoftSkills>? listaSoftSkills;
+    private List<SoftSkill>? listaSoftSkills;
 
     private void ApriFinestraModale()
     {
@@ -100,7 +100,7 @@
     {
         try
         {
-            listaSoftSkills = await HttpClient.GetFromJsonAsync<List<SoftSkills>>("api/SoftSkill");
+            listaSoftSkills = await HttpClient.GetFromJsonAsync<List<SoftSkill>>("api/SoftSkill");
         }
         catch (HttpRequestException)
         {
