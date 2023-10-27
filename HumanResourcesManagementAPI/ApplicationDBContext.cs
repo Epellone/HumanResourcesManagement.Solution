@@ -48,7 +48,8 @@ namespace HumanResourcesManagementAPI
             modelBuilder.Entity<Candidato>()
                         .HasOne(c => c.Colloquio)
                         .WithOne(cq => cq.Candidato)
-                        .HasForeignKey<Colloquio>(cq => cq.CandidatoID);
+                        .HasForeignKey<Colloquio>(cq => cq.CandidatoID)
+                        .IsRequired(false);
 
             modelBuilder.Entity<Colloquio>()
                         .HasOne(cl => cl.Sede)

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HumanResourcesManagementAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20231021084433_Fede1")]
-    partial class Fede1
+    [Migration("20231026130350_modificaclassecandidato")]
+    partial class modificaclassecandidato
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("BenefitsID")
@@ -40,7 +40,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<Guid>("ContrattoID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -58,7 +58,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("CandidatoID")
@@ -67,7 +67,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<Guid>("EsperienzeLavorativeID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -85,7 +85,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("CandidatoID")
@@ -97,7 +97,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<Guid>("HardSkillID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -115,27 +115,22 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("DipendenteID")
+                    b.Property<Guid?>("DipendenteID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("DipendenteId")
+                    b.Property<Guid?>("SedeID")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SedeID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DipendenteID")
-                        .IsUnique();
-
-                    b.HasIndex("DipendenteId");
+                    b.HasIndex("DipendenteID");
 
                     b.HasIndex("SedeID");
 
@@ -148,7 +143,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("CandidatoID")
@@ -160,7 +155,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<Guid>("SoftSkillID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -172,74 +167,13 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.ToTable("SoftSkillsCandidati");
                 });
 
-            modelBuilder.Entity("HumanResourcesManagementAPI.Models.Associazioni.TipologiaColloquio", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Attivo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Descrizione")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TipologieColloqui");
-                });
-
-            modelBuilder.Entity("HumanResourcesManagementAPI.Models.Associazioni.TipologiaContratto", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Attivo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Descrizione")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TipologieContratti");
-                });
-
-            modelBuilder.Entity("HumanResourcesManagementAPI.Models.Associazioni.TipologiaDocumento", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Attivo")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Descrizione")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Version")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TipologieDocumenti");
-                });
-
             modelBuilder.Entity("HumanResourcesManagementAPI.Models.Associazioni.TitoloDiStudioCandidato", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("CandidatoID")
@@ -248,7 +182,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<Guid>("TitoloDiStudioID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -266,13 +200,13 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<string>("Descrizione")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -286,13 +220,15 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<string>("CF")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cognome")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("ColloquioID")
@@ -305,9 +241,11 @@ namespace HumanResourcesManagementAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nome")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Provincia")
@@ -316,7 +254,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<string>("RecapitoTelefonico")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -330,7 +268,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("CandidatoID")
@@ -355,7 +293,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<Guid>("TipologiaColloquioID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -379,7 +317,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("LivelloContrattualeID")
@@ -397,7 +335,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<Guid>("TipologiaDocumentoID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -419,7 +357,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<string>("CF")
@@ -430,14 +368,14 @@ namespace HumanResourcesManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("MansioneID")
+                    b.Property<Guid?>("MansioneID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -453,11 +391,10 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<string>("Azienda")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DataFine")
@@ -467,11 +404,10 @@ namespace HumanResourcesManagementAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Descrizione")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -485,7 +421,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<string>("Candidato")
@@ -494,7 +430,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<string>("Descrizione")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -508,13 +444,13 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<string>("Descrizione")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -528,14 +464,14 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<string>("Descrizione")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -549,7 +485,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<string>("Descrizione")
@@ -560,9 +496,6 @@ namespace HumanResourcesManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("IDReferente")
-                        .HasColumnType("int");
-
                     b.Property<string>("Indirizzo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -571,7 +504,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -585,7 +518,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("CandidatoId")
@@ -594,7 +527,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<string>("Descrizione")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -604,13 +537,74 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.ToTable("SoftSkills");
                 });
 
+            modelBuilder.Entity("HumanResourcesManagementAPI.Models.Classi.TipologiaColloquio", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("Attivo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descrizione")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TipologieColloqui");
+                });
+
+            modelBuilder.Entity("HumanResourcesManagementAPI.Models.Classi.TipologiaContratto", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("Attivo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descrizione")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TipologieContratti");
+                });
+
+            modelBuilder.Entity("HumanResourcesManagementAPI.Models.Classi.TipologiaDocumento", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool?>("Attivo")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Descrizione")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TipologieDocumenti");
+                });
+
             modelBuilder.Entity("HumanResourcesManagementAPI.Models.Classi.TitoloDiStudio", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("Attivo")
+                    b.Property<bool?>("Attivo")
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("CandidatoId")
@@ -619,7 +613,7 @@ namespace HumanResourcesManagementAPI.Migrations
                     b.Property<string>("Descrizione")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Version")
+                    b.Property<int?>("Version")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -689,14 +683,8 @@ namespace HumanResourcesManagementAPI.Migrations
             modelBuilder.Entity("HumanResourcesManagementAPI.Models.Associazioni.Sede_Dipendente", b =>
                 {
                     b.HasOne("HumanResourcesManagementAPI.Models.Classi.Dipendente", "Dipendente")
-                        .WithOne()
-                        .HasForeignKey("HumanResourcesManagementAPI.Models.Associazioni.Sede_Dipendente", "DipendenteID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("HumanResourcesManagementAPI.Models.Classi.Dipendente", null)
                         .WithMany("SedeDipendente")
-                        .HasForeignKey("DipendenteId");
+                        .HasForeignKey("DipendenteID");
 
                     b.HasOne("HumanResourcesManagementAPI.Models.Classi.Sede", "Sede")
                         .WithMany("SedeDipendente")
@@ -751,9 +739,7 @@ namespace HumanResourcesManagementAPI.Migrations
                 {
                     b.HasOne("HumanResourcesManagementAPI.Models.Classi.Candidato", "Candidato")
                         .WithOne("Colloquio")
-                        .HasForeignKey("HumanResourcesManagementAPI.Models.Classi.Colloquio", "CandidatoID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("HumanResourcesManagementAPI.Models.Classi.Colloquio", "CandidatoID");
 
                     b.HasOne("HumanResourcesManagementAPI.Models.Classi.Dipendente", "Dipendente")
                         .WithMany()
@@ -767,7 +753,7 @@ namespace HumanResourcesManagementAPI.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("HumanResourcesManagementAPI.Models.Associazioni.TipologiaColloquio", "TipologiaColloquio")
+                    b.HasOne("HumanResourcesManagementAPI.Models.Classi.TipologiaColloquio", "TipologiaColloquio")
                         .WithMany()
                         .HasForeignKey("TipologiaColloquioID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -796,13 +782,13 @@ namespace HumanResourcesManagementAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HumanResourcesManagementAPI.Models.Associazioni.TipologiaContratto", "TipologiaContratto")
+                    b.HasOne("HumanResourcesManagementAPI.Models.Classi.TipologiaContratto", "TipologiaContratto")
                         .WithMany()
                         .HasForeignKey("TipologiaContrattoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HumanResourcesManagementAPI.Models.Associazioni.TipologiaDocumento", "TipologiaDocumento")
+                    b.HasOne("HumanResourcesManagementAPI.Models.Classi.TipologiaDocumento", "TipologiaDocumento")
                         .WithMany()
                         .HasForeignKey("TipologiaDocumentoID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -821,9 +807,7 @@ namespace HumanResourcesManagementAPI.Migrations
                 {
                     b.HasOne("HumanResourcesManagementAPI.Models.Classi.Mansione", "Mansione")
                         .WithMany()
-                        .HasForeignKey("MansioneID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MansioneID");
 
                     b.Navigation("Mansione");
                 });

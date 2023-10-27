@@ -1,12 +1,11 @@
 ﻿using HumanResourcesManagementAPI.Models.Classi;
 using HumanResourcesManagementAPI.Models.Interface;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HumanResourcesManagementAPI.Controllers
 {
-    public class BenefitsController : Controller<Benefits>
+    public class SoftSkillController : Controller<SoftSkill>
     {
-        public BenefitsController(IRepository<Benefits> repository) : base(repository)
+        public SoftSkillController(IRepository<SoftSkill> repository) : base(repository)
         {
         }
     }

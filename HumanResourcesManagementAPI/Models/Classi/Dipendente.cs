@@ -15,9 +15,9 @@ namespace HumanResourcesManagementAPI.Models.Classi
         //public virtual Sede Sede { get; set; }
         //      public Guid ContrattoID { get; set; }
         //    public virtual Contratto Contratto { get; set; }
-        public Guid MansioneID { get; set; }
+        public Guid? MansioneID { get; set; }
         public virtual Mansione Mansione { get; set; }
-        public virtual ICollection<Sede_Dipendente> SedeDipendente { get; set; }
+        public virtual ICollection<Sede_Dipendente>? SedeDipendente { get; set; }
 
 
     }

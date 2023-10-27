@@ -1,6 +1,4 @@
-﻿using HumanResourcesManagementAPI.Models.Classi;
-
-namespace HumanResourcesManagementAPI.Models.Associazioni
+﻿namespace HumanResourcesManagementAPI.Models.Classi
 {
     public class TipologiaColloquio : AggregateRoot
     {
