@@ -18,7 +18,7 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiTitoliDiStudio">
-                        Descrizione <input type="text" class="form-control" @bind="nuovoTitoloDiStudio.Descrizione" required /><br />
+                        Descrizione <input type="text" class="form-control" @bind="nuovoTitoliDiStudio.Descrizione" required /><br />
 
 
                         <div class="modal-footer">
@@ -53,6 +53,21 @@
 <table>
     <tr>
         <th>Descrizione</th>
+    </tr>
+</table>
+
+<label for="scelta">Scegli: </label>
+
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
+
+<table>
+    <tr>
+        <th>Descrizione</th>
 
     </tr>
 
@@ -70,8 +85,8 @@
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TitoloDiStudio nuovoTitoloDiStudio = new TitoloDiStudio();
-    private List<TitoloDiStudio>? listaTitoliDiStudio;
+    private TitoliDiStudio nuovoTitoliDiStudio = new TitoliDiStudio();
+    private List<TitoliDiStudio>? listaTitoliDiStudio;
 
     private void ApriFinestraModale()
     {
@@ -98,7 +113,7 @@
     {
         try
         {
-            listaTitoliDiStudio = await HttpClient.GetFromJsonAsync<List<TitoloDiStudio>>("api/TitoloDiStudio");
+            listaTitoliDiStudio = await HttpClient.GetFromJsonAsync<List<TitoliDiStudio>>("api/TitoliDiStudio");
         }
         catch (HttpRequestException)
         {
@@ -109,17 +124,17 @@
 
     private async Task AggiungiTitoliDiStudio()
     {
-        if (IsValid(nuovoTitoloDiStudio))
+        if (IsValid(nuovoTitoliDiStudio))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoloDiStudio);
+            var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoliDiStudio);
 
             if (response.IsSuccessStatusCode)
             {
-                var titoliDiStudioCreato = await response.Content.ReadFromJsonAsync<TitoloDiStudio>();
-                if (listaTitoliDiStudio != null && titoliDiStudioCreato != null)
+                var titolidistudioCreato = await response.Content.ReadFromJsonAsync<TitoliDiStudio>();
+                if (listaTitoliDiStudio != null && titolidistudioCreato != null)
                 {
-                    listaTitoliDiStudio.Add(titoliDiStudioCreato);
-                    nuovoTitoloDiStudio = new TitoloDiStudio();
+                    listaTitoliDiStudio.Add(titolidistudioCreato);
+                    nuovoTitoliDiStudio = new TitoliDiStudio();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
@@ -131,24 +146,8 @@
         }
     }
 
-    private bool IsValid(TitoloDiStudio titoloDiStudio)
+    private bool IsValid(TitoliDiStudio titolodistudio)
     {
-        return !string.IsNullOrWhiteSpace(titoloDiStudio.Descrizione);
+        return !string.IsNullOrWhiteSpace(TitoliDiStudio.Descrizione);
     }
 }
-
-
-    <table>
-        <tr>
-            <th>Descrizione</th>
-        </tr>
-    </table>
-
-     <label for="scelta">Scegli: </label>
-    
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>

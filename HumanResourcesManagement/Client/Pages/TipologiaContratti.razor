@@ -18,9 +18,7 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiTipologiaContratti">
-                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaContratto.Descrizione" required /><br />
-
-
+                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaContratti.Descrizione" required /><br />
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -32,6 +30,22 @@
         </div>
     </div>
 }
+
+<table>
+    <tr>
+        <th>Descrizione</th>
+    </tr>
+</table>
+
+<label for="scelta">Scegli: </label>
+
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
+
 
 @if (mostraMessaggio)
 {
@@ -66,27 +80,12 @@
         }
 </table>
 
-<table>
-    <tr>
-        <th>Descrzione</th>
-    </tr>
-</table>
-
-<label for="scelta">Scegli: </label>
-
-<div class="container mt-3">
-    <div class="btn-group" role="group" aria-label="Scelta">
-        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-    </div>
-</div>
-
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TipologiaContratto nuovaTipologiaContratto = new TipologiaContratto();
-    private List<TipologiaContratto>? listaTipologiaContratti;
+    private TipologiaContratti nuovaTipologiaContratti = new TipologiaContratti();
+    private List<TipologiaContratti>? listaTipologiaContratti;
 
     private void ApriFinestraModale()
     {
@@ -113,7 +112,7 @@
     {
         try
         {
-            listaTipologiaContratti = await HttpClient.GetFromJsonAsync<List<TipologiaContratto>>("api/TipologiaContratto");
+            listaTipologiaContratti = await HttpClient.GetFromJsonAsync<List<TipologiaContratti>>("api/TipologiaContratti");
         }
         catch (HttpRequestException)
         {
@@ -124,17 +123,17 @@
 
     private async Task AggiungiTipologiaContratti()
     {
-        if (IsValid(nuovaTipologiaContratto))
+        if (IsValid(nuovaTipologiaContratti))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TipologiaContratto", nuovaTipologiaContratto);
+            var response = await HttpClient.PostAsJsonAsync("api/TipologiaContratti", nuovaTipologiaContratti);
 
             if (response.IsSuccessStatusCode)
             {
-                var tipologiacontrattiCreato = await response.Content.ReadFromJsonAsync<TipologiaContratto>();
+                var tipologiacontrattiCreato = await response.Content.ReadFromJsonAsync<TipologiaContratti>();
                 if (listaTipologiaContratti != null && tipologiacontrattiCreato != null)
                 {
                     listaTipologiaContratti.Add(tipologiacontrattiCreato);
-                    nuovaTipologiaContratto = new TipologiaContratto();
+                    nuovaTipologiaContratti = new TipologiaContratti();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
@@ -146,13 +145,13 @@
         }
     }
 
-    private bool IsValid(TipologiaContratto tipologiaContratto)
+    private bool IsValid(TipologiaContratti tipologiacontratti)
     {
-        return !string.IsNullOrWhiteSpace(tipologiaContratto.Descrizione);
+        return !string.IsNullOrWhiteSpace(tipologiacontratti.Descrizione);
     }
 }
 
 
 
 
-
+  

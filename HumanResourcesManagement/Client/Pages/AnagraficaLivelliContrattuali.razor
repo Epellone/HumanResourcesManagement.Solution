@@ -14,14 +14,12 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Livello Contrattuale</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">LIvello Contrattuale</h1>
                     <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiLivelloContrattuale">
                         Descrizione <input type="text" class="form-control" @bind="nuovoLivelloContrattuale.Descrizione" required /><br />
-                        
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -33,6 +31,20 @@
         </div>
     </div>
 }
+
+<table>
+    <tr>
+        <th>Descrizione</th>
+    </tr>
+</table>
+
+<label for="scelta">Scegli: </label>
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
 
 @if (mostraMessaggio)
 {
@@ -67,26 +79,11 @@
         }
 </table>
 
-
-<table>
-        <tr>
-            <th>Descrizione</th>
-        </tr>
-    </table>
-
-     <label for="scelta">Scegli: </label>
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>
-
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private LivelloContrattuale nuovoLivelloContrattuale = new LivelloContrattuale();
+    private LivelloContrattuale nuovoLivello = new LivelloContrattuale();
     private List<LivelloContrattuale>? listaLivelloContrattuale;
 
     private void ApriFinestraModale()
@@ -147,12 +144,13 @@
         }
     }
 
-    private bool IsValid(LivelloContrattuale livelloContrattuale)
+    private bool IsValid(LivelloContrattuale livellocontrattuale)
     {
-        return !string.IsNullOrWhiteSpace(livelloContrattuale.Descrizione);
+        return !string.IsNullOrWhiteSpace(livellocontrattuale.Descrizione);
 
     }
 }
+
 
 
 

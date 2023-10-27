@@ -54,6 +54,22 @@
     <tr>
         <th>Descrizione</th>
     </tr>
+</table>
+
+<label for="scelta">Scegli: </label>
+
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
+
+<table>
+    <tr>
+        <th>Descrizione</th>
+        
+    </tr>
 
     @if (listaTipologiaColloquio != null)
 
@@ -135,27 +151,4 @@
         return !string.IsNullOrWhiteSpace(tipologiaColloquio.Descrizione);
     }
 }
-
-
-
-
-
-
-
-
-
-<table>
-        <tr>
-            <th>Descrizione</th>
-        </tr>
-    </table>
-
-     <label for="scelta">Scegli: </label>
-    
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>
 
