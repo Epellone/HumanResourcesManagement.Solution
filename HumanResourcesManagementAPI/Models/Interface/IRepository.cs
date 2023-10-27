@@ -5,9 +5,9 @@
 
         Task<T> Create(T entity);
         Task Update(T entity);
-        Task DeleteById(int id);
+        Task DeleteById(Guid id);
         Task<IEnumerable<T>> GetAll();
-        Task<T?> GetById(int id);
+        Task<T?> GetById(Guid id);
 
     }
 }

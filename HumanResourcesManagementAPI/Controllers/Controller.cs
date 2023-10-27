@@ -1,5 +1,4 @@
-﻿using HumanResourcesManagementAPI.Migrations;
-using HumanResourcesManagementAPI.Models.Interface;
+﻿using HumanResourcesManagementAPI.Models.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,26 +14,36 @@ namespace HumanResourcesManagementAPI.Controllers
         {
             this.repository = repository;
         }
+
         [HttpPost]
         public Task<T> Create(T entity)
         {
             return repository.Create(entity);
             
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(T entity)
+        {
+            await repository.Update(entity);
+            return Ok(entity);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var result = await repository.GetAll();
             return Ok(result);
         }
-        [HttpGet("{id:int}")]
-        public Task<T?> GetById(int id)
+
+        [HttpGet("{id:Guid}")]
+        public Task<T?> GetById(Guid id)
         {
             return repository.GetById(id);
         }
 
-        [HttpDelete("{id:int}")]
-        public Task DeleteById(int id)
+        [HttpDelete("{id:Guid}")]
+        public Task DeleteById(Guid id)
         {
             return repository.DeleteById(id);
         }
