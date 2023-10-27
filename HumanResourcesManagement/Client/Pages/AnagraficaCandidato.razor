@@ -95,7 +95,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="modificaCandidatoTitle">Modifica Candidato</h1>
-                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModifica"></button>
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="SalvaModifiche">
@@ -107,7 +107,7 @@
                         Recapito Telefonico <input type="text" @bind="candidatoDaModificare.RecapitoTelefonico" required /><br /><br />
                         Comune <input type="text" @bind="candidatoDaModificare.Comune" required /><br /><br />
                         Provincia <input type="text" @bind="candidatoDaModificare.Provincia" required /><br /><br />
-                        <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Annulla</button>
+                        <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModifica">Annulla</button>
                         <button type="submit" class="btn btn-primary">Salva Modifiche</button>
                     </form>
                 </div>
@@ -139,8 +139,10 @@
 @code {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private Candidato nuovoCandidato = new Candidato();
+    private bool mostraFinestraModifica = false;
+
     private List<Candidato>? listaCandidati;
+    private Candidato nuovoCandidato = new Candidato();
     private Candidato? candidatoDaModificare = null;
     private Candidato? candidatoDaEliminare = null;
 
@@ -204,6 +206,16 @@
     {
         mostraFinestraModale = false;
     }   
+
+    //private void ApriFinestraModifica()
+    //{
+    //    mostraFinestraModifica = true;
+    //}
+
+    private void ChiudiFinestraModifica()
+    {
+        candidatoDaModificare = null;
+    }
 
     private void ChiudiMessaggio()
     {
