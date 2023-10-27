@@ -8,14 +8,14 @@
 <h3>InserimentoColloquio</h3>
 
 
-<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Colloquio</button>
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi DipendenteColloquio</button>
 @if (mostraFinestraModale)
 {
     <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati Colloquio</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati DipendenteColloquio</h1>
                     <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -23,7 +23,7 @@
                         Data Colloquio <input type="text" class="form-control" @bind="nuovoColloquio.DataColloquio" required /><br />
                         Sede ColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.SedeColloquioID" required /><br />
                         Sede <input type="text" class="form-control" @bind="nuovoColloquio.Sede" required /><br />
-                        DipendenteColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.DipendendenteColloquioID" required /><br />
+                        DipendenteColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.DipendenteColloquioID" required /><br />
                         Dipendente <input type="text" class="form-control" @bind="nuovoColloquio.Dipendente" required /><br />
                         TipologiaColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.TipologiaColloquioID" required /><br />
                         TipologiaColloquio <input type="text" class="form-control" @bind="nuovoColloquio.TipologiaColloquio" required /><br />

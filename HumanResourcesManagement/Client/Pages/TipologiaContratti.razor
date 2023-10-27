@@ -19,8 +19,6 @@
                 <div class="modal-body">
                     <form @onsubmit="AggiungiTipologiaContratti">
                         Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaContratti.Descrizione" required /><br />
-
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -32,6 +30,22 @@
         </div>
     </div>
 }
+
+<table>
+    <tr>
+        <th>Descrizione</th>
+    </tr>
+</table>
+
+<label for="scelta">Scegli: </label>
+
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
+
 
 @if (mostraMessaggio)
 {
@@ -140,18 +154,4 @@
 
 
 
-    <table>
-        <tr>
-            <th>Descrzione</th>
-        </tr>
-    </table>
-
-    <label for="scelta">Scegli: </label>
-
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>
-
+  

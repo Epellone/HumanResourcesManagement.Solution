@@ -53,6 +53,21 @@
 <table>
     <tr>
         <th>Descrizione</th>
+    </tr>
+</table>
+
+<label for="scelta">Scegli: </label>
+
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
+
+<table>
+    <tr>
+        <th>Descrizione</th>
 
     </tr>
 
@@ -61,7 +76,7 @@
         @foreach (var titolodistudio in listaTitoliDiStudio)
         {
             <tr>
-                <td>@titoliditudio.Descrizione</td>
+                <td>@titolodistudio.Descrizione</td>
             </tr>
         }
 </table>
@@ -109,7 +124,7 @@
 
     private async Task AggiungiTitoliDiStudio()
     {
-        if (IsValid(nuovaTitoliDiStudio))
+        if (IsValid(nuovoTitoliDiStudio))
         {
             var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoliDiStudio);
 
@@ -119,7 +134,7 @@
                 if (listaTitoliDiStudio != null && titolidistudioCreato != null)
                 {
                     listaTitoliDiStudio.Add(titolidistudioCreato);
-                    nuovaTitoliDiStudio = new TitoliDiStudio();
+                    nuovoTitoliDiStudio = new TitoliDiStudio();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
@@ -131,24 +146,8 @@
         }
     }
 
-    private bool IsValid(TitoloDiStudio titolodistudio)
+    private bool IsValid(TitoliDiStudio titolodistudio)
     {
-        return !string.IsNullOrWhiteSpace(TitoloDiStudio.Descrizione);
+        return !string.IsNullOrWhiteSpace(TitoliDiStudio.Descrizione);
     }
 }
-
-
-    <table>
-        <tr>
-            <th>Descrizione</th>
-        </tr>
-    </table>
-
-     <label for="scelta">Scegli: </label>
-    
-    <div class="container mt-3">
-        <div class="btn-group" role="group" aria-label="Scelta">
-            <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-            <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
-        </div>
-    </div>

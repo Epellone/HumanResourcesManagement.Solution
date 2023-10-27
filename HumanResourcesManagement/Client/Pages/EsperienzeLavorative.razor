@@ -117,11 +117,11 @@
 
     }
 
-    private async Task AggiungiEsperienzaLavorativa()
+    private async Task AggiungiEsperienzeLavorativa()
     {
-        if (IsValid(nuovaEsperienzaLavorativa))
+        if (IsValid(nuovaEsperienzeLavorativa))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/EsperienzaLavorativa", nuovaEsperienzaLavorativa);
+            var response = await HttpClient.PostAsJsonAsync("api/EsperienzeLavorativa", nuovaEsperienzeLavorativa);
 
             if (response.IsSuccessStatusCode)
             {
@@ -129,7 +129,7 @@
                 if (listaEsperienzeLavorative != null && esperienzelavorativeCreato != null)
                 {
                     listaEsperienzeLavorative.Add(esperienzelavorativeCreato);
-                    nuovaEsperienzaLavorativa = new EsperienzeLavorative();
+                    nuovaEsperienzeLavorativa = new EsperienzeLavorative();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
