@@ -1,5 +1,141 @@
 ﻿<h3>TitoliDiStudio</h3>
 @page "/TitoliDiStudio"
+@using HumanResourcesManagementAPI.Models
+@inject HttpClient HttpClient
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi TitoliDitudio</button>
+@if (mostraFinestraModale)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati TitoliDiStudio</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiTitoliDiStudio">
+                        Descrizione <input type="text" class="form-control" @bind="nuovoTitoliDiStudio.Descrizione" required /><br />
+
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>I titoli di studio è stata aggiunta con successo!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<table>
+    <tr>
+        <th>Descrizione</th>
+
+    </tr>
+
+    @if (listaTitoliDiStudio != null)
+
+        @foreach (var titolodistudio in listaTitoliDiStudio)
+        {
+            <tr>
+                <td>@titoliditudio.Descrizione</td>
+            </tr>
+        }
+</table>
+
+@code
+{
+    private bool mostraFinestraModale = false;
+    private bool mostraMessaggio = false;
+    private TitoliDiStudio nuovoTitoliDiStudio = new TitoliDiStudio();
+    private List<TitoliDiStudio>? listaTitoliDiStudio;
+
+    private void ApriFinestraModale()
+    {
+        mostraFinestraModale = true;
+    }
+
+    private void ChiudiFinestraModale()
+    {
+        mostraFinestraModale = false;
+    }
+
+    private void ChiudiMessaggio()
+    {
+        mostraMessaggio = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        try
+        {
+            listaTitoliDiStudio = await HttpClient.GetFromJsonAsync<List<TitoliDiStudio>>("api/TitoliDiStudio");
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
+
+    }
+
+    private async Task AggiungiTitoliDiStudio()
+    {
+        if (IsValid(nuovaTitoliDiStudio))
+        {
+            var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoliDiStudio);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var titolidistudioCreato = await response.Content.ReadFromJsonAsync<TitoliDiStudio>();
+                if (listaTitoliDiStudio != null && titolidistudioCreato != null)
+                {
+                    listaTitoliDiStudio.Add(titolidistudioCreato);
+                    nuovaTitoliDiStudio = new TitoliDiStudio();
+                    mostraFinestraModale = false;
+                    mostraMessaggio = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'aggiunta di titolo di studio.");
+            }
+        }
+    }
+
+    private bool IsValid(TitoloDiStudio titolodistudio)
+    {
+        return !string.IsNullOrWhiteSpace(TitoloDiStudio.Descrizione);
+    }
+}
 
 
     <table>
