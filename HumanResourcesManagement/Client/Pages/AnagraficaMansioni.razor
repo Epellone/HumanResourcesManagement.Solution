@@ -1,24 +1,24 @@
-﻿<h3>TipologiaContratti</h3>
-@page "/TipologiaContratti"
+﻿<h3>Mansioni</h3>
+@page "/Mansioni"
 @using HumanResourcesManagementAPI.Models
 @inject HttpClient HttpClient
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @inject IJSRuntime JS
 
 
-<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Tipologia Contratti</button>
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Mansione</button>
 @if (mostraFinestraModale)
 {
     <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati TipologiaContratti</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati Mansione</h1>
                     <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form @onsubmit="AggiungiTipologiaContratti">
-                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaContratti.Descrizione" required /><br />
+                    <form @onsubmit="AggiungiMansione">
+                        Descrizione <input type="text" class="form-control" @bind="nuovaMansione.Descrizione" required /><br />
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -31,11 +31,6 @@
     </div>
 }
 
-
-
-
-
-
 @if (mostraMessaggio)
 {
     <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
@@ -46,7 +41,7 @@
                     <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>La tipologia contratti è stata aggiunta con successo!</p>
+                    <p>La mansione è stata aggiunta con successo!</p>
                 </div>
             </div>
         </div>
@@ -56,25 +51,28 @@
 <table>
     <tr>
         <th>Descrizione</th>
-
     </tr>
 
-    @if (listaTipologiaContratti != null)
+    @if (listaMansioni != null)
 
-        @foreach (var tipologiaContratto in listaTipologiaContratti)
+        @foreach (var mansione in listaMansioni)
         {
             <tr>
-                <td>@tipologiaContratto.Descrizione</td>
+                <td>@mansione.Descrizione</td>
             </tr>
         }
 </table>
+
+
+
+
 
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TipologiaContratto nuovaTipologiaContratti = new TipologiaContratto();
-    private List<TipologiaContratto>? listaTipologiaContratti;
+    private Mansione nuovaMansione = new Mansione();
+    private List<Mansione>? listaMansioni;
 
     private void ApriFinestraModale()
     {
@@ -101,7 +99,7 @@
     {
         try
         {
-            listaTipologiaContratti = await HttpClient.GetFromJsonAsync<List<TipologiaContratto>>("api/TipologiaContratti");
+            listaMansioni = await HttpClient.GetFromJsonAsync<List<Mansione>>("api/Mansione");
         }
         catch (HttpRequestException)
         {
@@ -110,37 +108,43 @@
 
     }
 
-    private async Task AggiungiTipologiaContratti()
+    private async Task AggiungiMansione()
     {
-        if (IsValid(nuovaTipologiaContratti))
+        if (IsValid(nuovaMansione))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TipologiaContratti", nuovaTipologiaContratti);
+            var response = await HttpClient.PostAsJsonAsync("api/Mansione", nuovaMansione);
 
             if (response.IsSuccessStatusCode)
             {
-                var tipologiacontrattiCreato = await response.Content.ReadFromJsonAsync<TipologiaContratto>();
-                if (listaTipologiaContratti != null && tipologiacontrattiCreato != null)
+                var mansioneCreato = await response.Content.ReadFromJsonAsync<Mansione>();
+                if (listaMansioni != null && mansioneCreato != null)
                 {
-                    listaTipologiaContratti.Add(tipologiacontrattiCreato);
-                    nuovaTipologiaContratti = new TipologiaContratto();
+                    listaMansioni.Add(mansioneCreato);
+                    nuovaMansione = new Mansione();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
             }
             else
             {
-                Console.WriteLine("Errore durante l'aggiunta della tipologia contratti.");
+                Console.WriteLine("Errore durante l'aggiunta della mansione.");
             }
         }
     }
 
-    private bool IsValid(TipologiaContratto tipologiaContratto)
+    private bool IsValid(Mansione mansione)
     {
-        return !string.IsNullOrWhiteSpace(tipologiaContratto.Descrizione);
+        return !string.IsNullOrWhiteSpace(mansione.Descrizione);
+
     }
 }
 
 
 
 
-  
+
+
+
+
+
+

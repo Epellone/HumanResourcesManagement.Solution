@@ -1,8 +1,42 @@
-﻿ <h3>Anagrafica Sedi</h3>
- @page "/AnagraficaSedi"
+﻿@using HumanResourcesManagementAPI.Models
+@inject HttpClient HttpClient
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@page "/AnagraficaSedi"
+@inject IJSRuntime JS
+
+<h3>AnagraficaSedi</h3>
 
 
-    <table>
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale" >Aggiungi Sede</button>
+@if (mostraFinestraModale)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati Sede</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiSede">
+                        Descrizione <input type="text" class="form-control" @bind="nuovaSede.Descrizione" required /><br />
+                        Indirizzo <input type="text" class="form-control" @bind="nuovaSede.Indirizzo" required /><br />
+                        Recapito Telefonico <input type="text" class="form-control" @bind="nuovaSede.RecapitoTel" required /><br />
+                        Email Sede <input type="text" class="form-control" @bind="nuovaSede.EmailSede" required /><br />
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<table>
         <tr>
             <th>Sede</th>
             <th>Indirizzo</th>
@@ -11,7 +45,115 @@
             <th>ID Referente</th>
         </tr>
 
-    </table>
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>La sede è stata aggiunta con successo!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
-    <button type="button" onclick="alert('Hello world!')">Aggiungi sede</button>
+@if (listaSedi != null)
+    
+        @foreach (var sede in listaSedi)
+        {
+            <tr>
+            <td>@sede.Descrizione</td>
+            <td>@sede.Indirizzo</td>
+            <td>@sede.RecapitoTel</td>
+            <td>@sede.Descrizione</td>
+            <td>@sede.EmailSede</td>
+            </tr>
+        }
+</table>
+    
+@code
+{
+    private bool mostraFinestraModale = false;
+    private bool mostraMessaggio = false;
+    private Sede nuovaSede = new Sede();
+    private List<Sede>? listaSedi;
+
+    private void ApriFinestraModale()
+    {
+        mostraFinestraModale = true;
+    }
+
+    private void ChiudiFinestraModale()
+    {
+        mostraFinestraModale = false;
+    }
+
+    private void ChiudiMessaggio()
+    {
+        mostraMessaggio = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        try
+        {
+            listaSedi = await HttpClient.GetFromJsonAsync<List<Sede>>("api/Sede");
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
+
+    }
+
+    private async Task AggiungiSede()
+    {
+        if (IsValid(nuovaSede))
+        {
+            var response = await HttpClient.PostAsJsonAsync("api/Sede", nuovaSede);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var sedeCreato = await response.Content.ReadFromJsonAsync<Sede>();
+                if (listaSedi != null && sedeCreato != null)
+                {
+                    listaSedi.Add(sedeCreato);
+                    nuovaSede = new Sede();
+                    mostraFinestraModale = false;
+                    mostraMessaggio = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'aggiunta della sede.");
+            }
+        }
+    }
+
+    private bool IsValid(Sede sede)
+    {
+        return !string.IsNullOrWhiteSpace(sede.Descrizione)
+            && !string.IsNullOrWhiteSpace(sede.Indirizzo)
+            && !string.IsNullOrWhiteSpace(sede.RecapitoTel)
+            && !string.IsNullOrWhiteSpace(sede.EmailSede);
+    }
+}
+    
+
+    
+
+
+
+
 

@@ -1,24 +1,25 @@
-﻿<h3>TipologiaContratti</h3>
-@page "/TipologiaContratti"
+﻿<h3>LivelliContrattuali</h3>
+@page "/LivelliContrattuali"
 @using HumanResourcesManagementAPI.Models
 @inject HttpClient HttpClient
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @inject IJSRuntime JS
 
 
-<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Tipologia Contratti</button>
+
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Livello Contrattuale</button>
 @if (mostraFinestraModale)
 {
     <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati TipologiaContratti</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">LIvello Contrattuale</h1>
                     <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form @onsubmit="AggiungiTipologiaContratti">
-                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaContratti.Descrizione" required /><br />
+                    <form @onsubmit="AggiungiLivelloContrattuale">
+                        Descrizione <input type="text" class="form-control" @bind="nuovoLivelloContrattuale.Descrizione" required /><br />
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -31,10 +32,19 @@
     </div>
 }
 
+<table>
+    <tr>
+        <th>Descrizione</th>
+    </tr>
+</table>
 
-
-
-
+<label for="scelta">Scegli: </label>
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
 
 @if (mostraMessaggio)
 {
@@ -46,7 +56,7 @@
                     <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>La tipologia contratti è stata aggiunta con successo!</p>
+                    <p>Il livello contrattuale è stato aggiunto con successo!</p>
                 </div>
             </div>
         </div>
@@ -56,15 +66,15 @@
 <table>
     <tr>
         <th>Descrizione</th>
-
     </tr>
 
-    @if (listaTipologiaContratti != null)
+    @if (listaLivelloContrattuale != null)
 
-        @foreach (var tipologiaContratto in listaTipologiaContratti)
+        @foreach (var sede in listaLivelloContrattuale)
         {
             <tr>
-                <td>@tipologiaContratto.Descrizione</td>
+                <td>@sede.Descrizione</td>
+                
             </tr>
         }
 </table>
@@ -73,8 +83,8 @@
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TipologiaContratto nuovaTipologiaContratti = new TipologiaContratto();
-    private List<TipologiaContratto>? listaTipologiaContratti;
+    private LivelloContrattuale nuovoLivelloContrattuale = new LivelloContrattuale();
+    private List<LivelloContrattuale>? listaLivelloContrattuale;
 
     private void ApriFinestraModale()
     {
@@ -101,7 +111,7 @@
     {
         try
         {
-            listaTipologiaContratti = await HttpClient.GetFromJsonAsync<List<TipologiaContratto>>("api/TipologiaContratti");
+            listaLivelloContrattuale = await HttpClient.GetFromJsonAsync<List<LivelloContrattuale>>("api/LivelloContrattuale");
         }
         catch (HttpRequestException)
         {
@@ -110,37 +120,39 @@
 
     }
 
-    private async Task AggiungiTipologiaContratti()
+    private async Task AggiungiLivelloContrattuale()
     {
-        if (IsValid(nuovaTipologiaContratti))
+        if (IsValid(nuovoLivelloContrattuale))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TipologiaContratti", nuovaTipologiaContratti);
+            var response = await HttpClient.PostAsJsonAsync("api/LivelloContrattuale", nuovoLivelloContrattuale);
 
             if (response.IsSuccessStatusCode)
             {
-                var tipologiacontrattiCreato = await response.Content.ReadFromJsonAsync<TipologiaContratto>();
-                if (listaTipologiaContratti != null && tipologiacontrattiCreato != null)
+                var LivelloCreato = await response.Content.ReadFromJsonAsync<LivelloContrattuale>();
+                if (listaLivelloContrattuale != null && LivelloCreato != null)
                 {
-                    listaTipologiaContratti.Add(tipologiacontrattiCreato);
-                    nuovaTipologiaContratti = new TipologiaContratto();
+                    listaLivelloContrattuale.Add(LivelloCreato);
+                    nuovoLivelloContrattuale = new LivelloContrattuale();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
                 }
             }
             else
             {
-                Console.WriteLine("Errore durante l'aggiunta della tipologia contratti.");
+                Console.WriteLine("Errore durante l'aggiunta del livello contrattuale.");
             }
         }
     }
 
-    private bool IsValid(TipologiaContratto tipologiaContratto)
+    private bool IsValid(LivelloContrattuale livellocontrattuale)
     {
-        return !string.IsNullOrWhiteSpace(tipologiaContratto.Descrizione);
+        return !string.IsNullOrWhiteSpace(livellocontrattuale.Descrizione);
+
     }
 }
 
 
 
 
-  
+
+

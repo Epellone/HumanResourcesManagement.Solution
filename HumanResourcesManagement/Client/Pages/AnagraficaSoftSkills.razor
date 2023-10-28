@@ -1,5 +1,152 @@
 ﻿<h3>SoftSkills</h3>
-@page "/SoftSkills"
+@page "/AnagraficaSoftSkills"
+@using HumanResourcesManagementAPI.Models
+@inject HttpClient HttpClient
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@inject IJSRuntime JS
+
+
+
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi SoftSkills</button>
+@if (mostraFinestraModale)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati SoftSkills</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiSoftSkill">
+                        Descrizione <input type="text" class="form-control" @bind="nuovaSoftSkill.Descrizione" required /><br />
+                        
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>La soft skill è stata aggiunta con successo!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<table>
+    <tr>
+        <th>Descrizione</th>
+        
+    </tr>
+
+    @if (listaSoftSkills != null)
+
+        @foreach (var softskills in listaSoftSkills)
+        {
+            <tr>
+                <td>@softskills.Descrizione</td>
+                
+            </tr>
+        }
+</table>
+
+@code
+{
+    private bool mostraFinestraModale = false;
+    private bool mostraMessaggio = false;
+    private SoftSkill nuovaSoftSkill = new SoftSkill();
+    private List<SoftSkill>? listaSoftSkills;
+
+    private void ApriFinestraModale()
+    {
+        mostraFinestraModale = true;
+    }
+
+    private void ChiudiFinestraModale()
+    {
+        mostraFinestraModale = false;
+    }
+
+    private void ChiudiMessaggio()
+    {
+        mostraMessaggio = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        try
+        {
+            listaSoftSkills = await HttpClient.GetFromJsonAsync<List<SoftSkill>>("api/SoftSkill");
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
+
+    }
+
+    private async Task AggiungiSoftSkill()
+    {
+        if (IsValid(nuovaSoftSkill))
+        {
+            var response = await HttpClient.PostAsJsonAsync("api/SoftSkill", nuovaSoftSkill);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var softskillCreato = await response.Content.ReadFromJsonAsync<SoftSkill>();
+                if (listaSoftSkills != null && softskillCreato != null)
+                {
+                    listaSoftSkills.Add(softskillCreato);
+                    nuovaSoftSkill = new SoftSkill();
+                    mostraFinestraModale = false;
+                    mostraMessaggio = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'aggiunta della softskill.");
+            }
+        }
+    }
+
+    private bool IsValid(SoftSkill softskill)
+    {
+        return !string.IsNullOrWhiteSpace(softskill.Descrizione);
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -33,12 +180,11 @@
             
         </div>
     </div>
-</div> *@
-
-
- <table class ="table">
+</div> 
+    
+    
+        
     <tbody>
-
         <tr>
             <td>Team management </td>
             <td>
@@ -61,7 +207,7 @@
                 </div>
             </td>
         </tr>
-
+ 
         <tr>
             <td>Teamwork</td>
             <td>
@@ -98,10 +244,6 @@
         </tr>
 
     </tbody>
-</table> 
-
-
-
 
 
 <table width="10%" border="1" align="center">
@@ -130,8 +272,4 @@
         </tr>
     </tbody>
 </table>
-
-
-
-      
-
+ *@

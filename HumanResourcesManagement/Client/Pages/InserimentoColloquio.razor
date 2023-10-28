@@ -1,21 +1,172 @@
-﻿<h3>InserimentoColloquio</h3>
+﻿
+@using HumanResourcesManagementAPI.Models
+@inject HttpClient HttpClient
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @page "/InserimentoColloquio"
+@inject IJSRuntime JS
+
+<h3>InserimentoColloquio</h3>
 
 
-    <table>
-        <tr>
-            <th>Data Colloquio</th>
-            <th>Sede Colloquio ID</th>
-            <th>Sede</th>
-            <th>Dipendente Colloquio ID</th>
-            <th>Dipendente</th>
-            <th>Tipologia Colloquio</th>
-            <th>Tipologia Colloquio ID</th>
-            <th>Candidato</th>
-            <th>Candidato ID</th>
-            <th>Note</th>
-        </tr>
-    </table>
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi DipendenteColloquio</button>
+@if (mostraFinestraModale)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dati DipendenteColloquio</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiColloquio">
+                        Data Colloquio <input type="text" class="form-control" @bind="nuovoColloquio.DataColloquio" required /><br />
+                        Sede ColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.SedeColloquioID" required /><br />
+                        Sede <input type="text" class="form-control" @bind="nuovoColloquio.Sede" required /><br />
+                        DipendenteColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.DipendenteColloquioID" required /><br />
+                        Dipendente <input type="text" class="form-control" @bind="nuovoColloquio.Dipendente" required /><br />
+                        TipologiaColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.TipologiaColloquioID" required /><br />
+                        TipologiaColloquio <input type="text" class="form-control" @bind="nuovoColloquio.TipologiaColloquio" required /><br />
+                        CandidatoID <input type="text" class="form-control" @bind="nuovoColloquio.CandidatoID" required /><br />
+                        Candidato <input type="text" class="form-control" @bind="nuovoColloquio.Candidato" required /><br />
+                        Note <input type="text" class="form-control" @bind="nuovoColloquio.Note" required /><br />
 
-    <button type="button" onclick="alert('Hello world!')">Aggiungi colloquio</button>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Il colloquio è stato aggiunto con successo!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<table>
+    <tr>
+        <th>DataColloquio</th>
+        <th>SedeColloquioID</th>
+        <th>Sede</th>
+        <th>DipendenteColloquioID</th>
+        <th>Dipendente</th>
+        <th>TipologiaColloquioID</th>
+        <th>TipologiaColloquio</th>
+        <th>CandidatoID</th>
+        <th>Candidato</th>
+        <th>Note</th>
+    </tr>
+
+    @if (listaColloqui != null)
+
+        @foreach (var colloquio in listaColloqui)
+        {
+            <tr>
+                <td>@colloquio.DataColloquio</td>
+                <td>@colloquio.SedeColloquioID</td>
+                <td>@colloquio.Sede</td>
+                <td>@colloquio.DipendenteColloquioID</td>
+                <td>@colloquio.Dipendente</td>
+                <td>@colloquio.TipologiaColloquioID</td>
+                <td>@colloquio.TipologiaColloquio</td>
+                <td>@colloquio.CandidatoID</td>
+                <td>@colloquio.Candidato</td>
+                <td>@colloquio.Note</td>
+            </tr>
+        }
+</table>
+
+@code
+{
+    private bool mostraFinestraModale = false;
+    private bool mostraMessaggio = false;
+    private Colloquio nuovoColloquio = new Colloquio();
+    private List<Colloquio>? listaColloqui;
+    private void ApriFinestraModale()
+    {
+        mostraFinestraModale = true;
+    }
+
+    private void ChiudiFinestraModale()
+    {
+        mostraFinestraModale = false;
+    }
+
+    private void ChiudiMessaggio()
+    {
+        mostraMessaggio = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        try
+        {
+            listaColloqui = await HttpClient.GetFromJsonAsync<List<Colloquio>>("api/Colloquio");
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
+
+    }
+
+    private async Task AggiungiColloquio()
+    {
+ 
+            var response = await HttpClient.PostAsJsonAsync("api/Colloquio", nuovoColloquio);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var colloquioCreato = await response.Content.ReadFromJsonAsync<Colloquio>();
+                if (listaColloqui != null && colloquioCreato != null)
+                {
+                    listaColloqui.Add(colloquioCreato);
+                    nuovoColloquio = new Colloquio();
+                    mostraFinestraModale = false;
+                    mostraMessaggio = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'aggiunta del colloquio.");
+            }
+        
+    }
+
+    // private bool IsValid(Colloquio colloquio)
+    // {
+    //     return !string.IsNullOrWhiteSpace(colloquio.DataColloquio)
+    //         && !string.IsNullOrWhiteSpace(colloquio.SedeColloquioID)
+    //         && !string.IsNullOrWhiteSpace(colloquio.Sede)
+    //         && !string.IsNullOrWhiteSpace(colloquio.DipendenteColloquioID)
+    //         && !string.IsNullOrWhiteSpace(colloquio.Dipendente)
+    //         && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquio)
+    //         && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquioID)
+    //         && !string.IsNullOrWhiteSpace(colloquio.Candidato)
+    //         && !string.IsNullOrWhiteSpace(colloquio.CandidatoID)
+    //         && !string.IsNullOrWhiteSpace(colloquio.Note);
+    // }
+}

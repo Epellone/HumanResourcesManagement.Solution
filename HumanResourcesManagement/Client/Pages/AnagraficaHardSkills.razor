@@ -1,0 +1,290 @@
+﻿@page "/AnagraficaHardSkills"
+@using HumanResourcesManagementAPI.Models
+@inject HttpClient HttpClient
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
+@inject IJSRuntime JS
+<h3>HardSkills</h3>
+
+
+<button type="button" class="btn btn-primary" @onclick="ApriFinestraModale"> Aggiungi Hard Skill </button>
+@if (mostraFinestraModale)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Hard Skills</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiHardSkill">
+                        Descrizione <input type="text" class="form-control" @bind="nuovaHardSkill.Descrizione" required /><br />
+                        
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<table>
+    <tr>
+        <th>Descrizione</th>
+    </tr>
+
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>L'HardSkill è stata aggiunta con successo!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+    @if (listaHardSkill != null)
+
+        @foreach (var hardSkill in listaHardSkill)
+        {
+            <tr>
+                <td>@hardSkill.Descrizione</td>
+            </tr>
+        }
+</table>
+
+@code
+{
+    private bool mostraFinestraModale = false;
+    private bool mostraMessaggio = false;
+    private HardSkill nuovaHardSkill = new HardSkill();
+    private List<HardSkill>? listaHardSkill;
+
+    private void ApriFinestraModale()
+    {
+        mostraFinestraModale = true;
+    }
+
+    private void ChiudiFinestraModale()
+    {
+        mostraFinestraModale = false;
+    }
+
+    private void ChiudiMessaggio()
+    {
+        mostraMessaggio = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAll();
+    }
+
+    private async Task GetAll()
+    {
+        try
+        {
+            listaHardSkill = await HttpClient.GetFromJsonAsync<List<HardSkill>>("api/HardSkill");
+        }
+        catch (HttpRequestException)
+        {
+            return;
+        }
+
+    }
+
+    private async Task AggiungiHardSkill()
+    {
+        if (IsValid(nuovaHardSkill))
+        {
+            var response = await HttpClient.PostAsJsonAsync("api/HardSkill", nuovaHardSkill);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var HardSkillCreato = await response.Content.ReadFromJsonAsync<HardSkill>();
+                if (listaHardSkill != null && HardSkillCreato != null)
+                {
+                    listaHardSkill.Add(HardSkillCreato);
+                    nuovaHardSkill = new HardSkill();
+                    mostraFinestraModale = false;
+                    mostraMessaggio = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'aggiunta dell'Hard Skill.");
+            }
+        }
+    }
+
+    private bool IsValid(HardSkill hardskill)
+    {
+        return  !string.IsNullOrWhiteSpace(hardskill.Descrizione);
+    }
+}
+
+
+
+
+
+
+
+
+
+@* <!DOCTYPE html>
+<html>
+<head>
+    <style>
+        table,
+        {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 20%;
+            height: 5px;
+            vertical-align: bottom;
+        }
+
+        th
+        {
+            border: 1px solid; 
+            background-color: grey;
+        }
+
+    </style>
+
+</head>
+<body>
+    *@
+
+@* <table class="w-25 border border-1 " >
+
+    <thead class="border border-1 border-danger w-100">
+        <tr>
+            <th></th>
+        </tr>
+        <tr>
+            <th>LEGENDA</th>
+        </tr>
+    </thead>
+       
+    <tbody>
+        <tr>
+            <td>0</td>
+            <td>Nessuna competenza</td>
+        </tr>
+
+        <tr>
+            <td>1</td>
+            <td>Competenze parziali</td>
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td>Può ricoprire tutte le posizioni</td>
+        </tr>
+
+    </tbody>
+
+</table> *@
+
+@* <table class="table table-bordered" style: width="30%" height="2%">
+
+    <thead>
+        <tr>
+            <td colspan="2" style: align="center">LEGENDA</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <th scope="row">0</th>
+            <td>Nessuna competenza</td>
+        </tr>
+
+        <tr>
+            <th scope="row">1</th>
+            <td>Competenze parziali</td>
+        </tr>
+
+        <tr>
+            <th scope="row">2</th>
+            <td>Può ricoprire tutte le posizioni</td>
+        </tr>
+    </tbody>
+
+
+</table> *@
+
+@* 
+
+<table width="20%" border="1" align="center">
+    <tr>
+        <td bgcolor="#D2D2D2"></td>
+        <font-weight-bold>
+            <td bgcolor="#D2D2D2">LEGENDA </td>
+        </font-weight-bold> 
+    </tr>
+
+    <tbody>
+        <tr>
+            <td bgcolor="ff0000">0 </td>
+            <td bgcolor="ff0000">Saturo</td>
+        </tr>
+
+        <tr>
+            <td bgcolor="ffff00">1</td>
+            <td bgcolor="ffff00">Parziale</td>
+        </tr>
+
+        <tr>
+            <td bgcolor="83f52c">2</td>
+            <td bgcolor="83f52c">Libero</td>
+        </tr>
+    </tbody>
+</table>
+
+<div>
+    <div class="row">
+        <div class="col-5">
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Team management</label>
+            </div>
+
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Lateral thinking</label>
+            </div>
+
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Teamwork</label>
+            </div>
+
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Leadershep</label>
+            </div>
+
+            <div class="form-check form-check-group">
+                <input id="checkbox6" type="checkbox" checked="checked">
+                <label for="checkbox6">Problem solving</label>
+            </div>
+
+        </div>
+    </div>
+</div>
+ *@
