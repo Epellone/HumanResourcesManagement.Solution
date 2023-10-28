@@ -7,7 +7,6 @@
 
 <h3>InserimentoColloquio</h3>
 
-
 <button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi DipendenteColloquio</button>
 @if (mostraFinestraModale)
 {
@@ -20,9 +19,9 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiColloquio">
-                        Data Colloquio <input type="text" class="form-control" @bind="nuovoColloquio.DataColloquio" required /><br />
-                        Sede ColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.SedeColloquioID" required /><br />
-                        Sede <input type="text" class="form-control" @bind="nuovoColloquio.Sede" required /><br />
+                        DataColloquio <input type="text" class="form-control" @bind="nuovoColloquio.DataColloquio" required /><br />
+                        SedeColloquioID<input type="text" class="form-control" @bind="nuovoColloquio.SedeColloquioID" required /><br />
+                        Sede<input type="text" class="form-control" @bind="nuovoColloquio.Sede" required /><br />
                         DipendenteColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.DipendenteColloquioID" required /><br />
                         Dipendente <input type="text" class="form-control" @bind="nuovoColloquio.Dipendente" required /><br />
                         TipologiaColloquioID <input type="text" class="form-control" @bind="nuovoColloquio.TipologiaColloquioID" required /><br />
@@ -72,10 +71,12 @@
         <th>CandidatoID</th>
         <th>Candidato</th>
         <th>Note</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
     </tr>
 
     @if (listaColloqui != null)
-
+    {
         @foreach (var colloquio in listaColloqui)
         {
             <tr>
@@ -89,16 +90,131 @@
                 <td>@colloquio.CandidatoID</td>
                 <td>@colloquio.Candidato</td>
                 <td>@colloquio.Note</td>
+                <td> <button class="btn btn-primary" @onclick="() =>ModificaColloquio(colloquio)">Modifica</button></td>
+                <td> <button class="btn btn-danger" @onclick="() => EliminaColloquio(colloquio)">Elimina</button></td>
             </tr>
         }
+    }
+
+        
 </table>
+@if (colloquioDaModificare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="ModificaColloquio">Modifica Colloquio</h1>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModifica"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="SalvaModifiche">
+                        Data Colloquio <input type="text" @bind="colloquioDaModificare.DataColloquio" required /><br /><br />
+                        Sede ColloquioID <input type="text" @bind="colloquioDaModificare.SedeColloquioID" required /><br /><br />
+                        Sede  <input type="text" @bind="colloquioDaModificare.Sede" required /><br /><br />
+                        Dipendente ColloquioID  <input type="text" @bind="colloquioDaModificare.DipendenteColloquioID" required /><br /><br />
+                        Dipendente <input type="text" @bind="colloquioDaModificare.Dipendente" required /><br /><br />
+                        TipologiaColloquioID  <input type="text" @bind="colloquioDaModificare.TipologiaColloquioID" required /><br /><br />
+                        TipologiaColloquio <input type="text" @bind="colloquioDaModificare.TipologiaColloquio" required /><br /><br />
+                        CandidatoID <input type="text" @bind="colloquioDaModificare.CandidatoID" required /><br /><br />
+                        Candidato <input type="text" @bind="colloquioDaModificare.Candidato" required /><br /><br />
+                        Note <input type="text" @bind="colloquioDaModificare.Note" required /><br /><br />
+                        <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModifica">Annulla</button>
+                        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (colloquioDaEliminare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
+                    <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sei sicuro di voler eliminare questo colloquio?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
+                    <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private Colloquio nuovoColloquio = new Colloquio();
+    private bool mostraFinestraModifica = false;
+
     private List<Colloquio>? listaColloqui;
+    private Colloquio nuovoColloquio = new Colloquio();
+    private Colloquio? colloquioDaModificare = null;
+    private Colloquio? colloquioDaEliminare = null;
+
+    private void ModificaCandidato(Colloquio colloquio)
+    {
+        colloquioDaModificare = colloquio;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (colloquioDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/Colloquio", colloquioDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                colloquioDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica del colloquio.");
+            }
+        }
+    }
+
+    private void ModificaColloquio(Colloquio colloquio)
+    {
+        colloquioDaModificare = colloquio;
+    }
+
+    private void EliminaColloquio(Colloquio colloquio)
+    {
+        colloquioDaEliminare = colloquio;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        colloquioDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (colloquioDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/Colloquio/{colloquioDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                colloquioDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione del colloquio.");
+            }
+        }
+    }
+
     private void ApriFinestraModale()
     {
         mostraFinestraModale = true;
@@ -107,6 +223,12 @@
     private void ChiudiFinestraModale()
     {
         mostraFinestraModale = false;
+
+    }
+
+    private void ChiudiFinestraModifica()
+    {
+        colloquioDaModificare = null;
     }
 
     private void ChiudiMessaggio()
@@ -156,17 +278,19 @@
         
     }
 
+   
+
     // private bool IsValid(Colloquio colloquio)
     // {
-    //     return !string.IsNullOrWhiteSpace(colloquio.DataColloquio)
-    //         && !string.IsNullOrWhiteSpace(colloquio.SedeColloquioID)
-    //         && !string.IsNullOrWhiteSpace(colloquio.Sede)
-    //         && !string.IsNullOrWhiteSpace(colloquio.DipendenteColloquioID)
-    //         && !string.IsNullOrWhiteSpace(colloquio.Dipendente)
-    //         && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquio)
-    //         && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquioID)
-    //         && !string.IsNullOrWhiteSpace(colloquio.Candidato)
-    //         && !string.IsNullOrWhiteSpace(colloquio.CandidatoID)
-    //         && !string.IsNullOrWhiteSpace(colloquio.Note);
+    // return !string.IsNullOrWhiteSpace(colloquio.DataColloquio)
+    //     && !string.IsNullOrWhiteSpace(colloquio.SedeColloquioID)
+    //     && !string.IsNullOrWhiteSpace(colloquio.Sede)
+    //     && !string.IsNullOrWhiteSpace(colloquio.DipendenteColloquioID)
+    //     && !string.IsNullOrWhiteSpace(colloquio.Dipendente)
+    //     && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquio)
+    //     && !string.IsNullOrWhiteSpace(colloquio.TipologiaColloquioID)
+    //     && !string.IsNullOrWhiteSpace(colloquio.Candidato)
+    //     && !string.IsNullOrWhiteSpace(colloquio.CandidatoID)
+    //     && !string.IsNullOrWhiteSpace(colloquio.Note);
     // }
 }

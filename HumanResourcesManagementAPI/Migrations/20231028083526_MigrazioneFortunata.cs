@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HumanResourcesManagementAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class databaseHR : Migration
+    public partial class MigrazioneFortunata : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -112,10 +112,10 @@ namespace HumanResourcesManagementAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Indirizzo = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RecapitoTel = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailSede = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Descrizione = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Indirizzo = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RecapitoTel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailSede = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Version = table.Column<int>(type: "int", nullable: true),
                     Attivo = table.Column<bool>(type: "bit", nullable: true)
                 },

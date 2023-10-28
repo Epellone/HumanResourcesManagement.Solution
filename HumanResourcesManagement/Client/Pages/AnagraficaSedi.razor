@@ -43,7 +43,11 @@
             <th>Recapito Telefonico</th>
             <th>Indirizzo e-mail</th>
             <th>ID Referente</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
+
         </tr>
+</table>
 
 @if (mostraMessaggio)
 {
@@ -72,17 +76,118 @@
             <td>@sede.RecapitoTel</td>
             <td>@sede.Descrizione</td>
             <td>@sede.EmailSede</td>
+            <td> <button class="btn btn-primary" @onclick="() => Modifica(sede)">Modifica</button></td>
+            <td> <button class="btn btn-danger" @onclick="() => EliminaAnagraficaSedi(sede)">Elimina</button></td>
+
             </tr>
         }
-</table>
+@if (anagraficasediDaModificare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modificaAnagraficaSedi">Modifica AnagraficaSedi</h1>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModale"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiSede">
+                        Descrizione <input type="text" class="form-control" @bind="nuovaSede.Descrizione" required /><br />
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (anagraficasediDaEliminare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
+                    <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sei sicuro di voler eliminare questa sede?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
+                    <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
     
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
+    private bool mostraMessaggioModifica = false;
+
     private Sede nuovaSede = new Sede();
     private List<Sede>? listaSedi;
+    private Sede? anagraficasediDaModificare = null;
+    private Sede? anagraficasediDaEliminare = null;
 
+    private void Modifica(Sede anagraficasedi)
+    {
+        anagraficasediDaModificare = anagraficasedi;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (anagraficasediDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/AnagraficaSedi", anagraficasediDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                anagraficasediDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica dell'anagrafica sede.");
+            }
+        }
+    }
+
+    private void EliminaAnagraficaSedi(Sede anagraficasedi)
+    {
+        anagraficasediDaEliminare = anagraficasedi;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        anagraficasediDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (anagraficasediDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/Sedi/{anagraficasediDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                anagraficasediDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione dell'anagrafica sedi.");
+            }
+        }
+    }
     private void ApriFinestraModale()
     {
         mostraFinestraModale = true;

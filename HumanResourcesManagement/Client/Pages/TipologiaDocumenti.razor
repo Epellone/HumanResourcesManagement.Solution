@@ -30,6 +30,14 @@
         </div>
     </div>
 }
+<table>
+    <tr>
+        <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
+    </tr>
+</table>
+
 
 @if (mostraMessaggio)
 {
@@ -48,32 +56,123 @@
     </div>
 }
 
-
-
-<table>
-    <tr>
-        <th>Descrizione</th>
-
-    </tr>
-
     @if (listaTipologiaDocumenti != null)
 
-        @foreach (var sede in listaTipologiaDocumenti)
-        {
+    @foreach (var tipologiadocumenti in listaTipologiaDocumenti)
+    {
             <tr>
-                <td>@sede.Descrizione</td>
+            <td>@tipologiadocumenti.Descrizione</td>
+            <td> <button class="btn btn-primary" @onclick="() => ModificaTipologiaDocumenti(tipologiadocumenti)">Modifica</button></td>
+            <td> <button class="btn btn-danger" @onclick="() => EliminaTipologiaDocumento(tipologiadocumenti)">Elimina</button></td>
             </tr>
-        }
-</table>
+    }
 
+    @if (tipologiadocumentiDaModificare != null)
+    {
+        <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modificatipologiaDocumenti">Modifica tipologiaDocumenti</h1>
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModale"></button>
+                    </div>
+                <div class="modal-body">
+                    <form @onsubmit="AggiungiTipologiaDocumenti">
+                        Descrizione <input type="text" class="form-control" @bind="nuovaTipologiaDocumento.Descrizione" required /><br />
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+    }
+    @if (tipologiadocumentiDaEliminare != null)
+{
+        <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
+                        <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Sei sicuro di voler eliminare questo documento?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
+                        <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
 
 
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private TipologiaDocumento nuovaTipologiaDocumento = new TipologiaDocumento();
+    private bool mostraMessaggioModifica = false;
+
     private List<TipologiaDocumento>? listaTipologiaDocumenti;
+    private TipologiaDocumento nuovaTipologiaDocumento = new TipologiaDocumento();
+    private TipologiaDocumento? tipologiadocumentiDaModificare = null;
+    private TipologiaDocumento? tipologiadocumentiDaEliminare = null;
+
+    private void ModificaTipologiaDocumenti(TipologiaDocumento tipologiadocumenti)
+    {
+        tipologiadocumentiDaModificare = tipologiadocumenti;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (tipologiadocumentiDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/TipologiaDocumento", tipologiadocumentiDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                tipologiadocumentiDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica del documento.");
+            }
+        }
+    }
+
+    private void EliminaTipologiaDocumento(TipologiaDocumento tipologiaDocumento)
+    {
+        tipologiadocumentiDaEliminare = tipologiaDocumento;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        tipologiadocumentiDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (tipologiadocumentiDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/TipologiaDocumento/{tipologiadocumentiDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                tipologiadocumentiDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione del documento.");
+            }
+        }
+    }
 
     private void ApriFinestraModale()
     {
@@ -83,6 +182,11 @@
     private void ChiudiFinestraModale()
     {
         mostraFinestraModale = false;
+    }
+
+    private void ChiudiFinestraModifica()
+    {
+        tipologiadocumentiDaModificare = null;
     }
 
     private void ChiudiMessaggio()
@@ -138,10 +242,6 @@
         return !string.IsNullOrWhiteSpace(tipologiaDocumenti.Descrizione);
     }
 }
-
-
-
-
 
 
 

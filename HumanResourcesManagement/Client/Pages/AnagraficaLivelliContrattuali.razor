@@ -32,19 +32,23 @@
     </div>
 }
 
-<table>
-    <tr>
-        <th>Descrizione</th>
-    </tr>
-</table>
-
-<label for="scelta">Scegli: </label>
-<div class="container mt-3">
-    <div class="btn-group" role="group" aria-label="Scelta">
-        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
-        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+@if (mostraMessaggio)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="messaggioTitle">Successo</h1>
+                    <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Livello contrattuale aggiunto con successo!</p>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+}
+
 
 @if (mostraMessaggio)
 {
@@ -66,25 +70,133 @@
 <table>
     <tr>
         <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
     </tr>
-
-    @if (listaLivelloContrattuale != null)
-
-        @foreach (var sede in listaLivelloContrattuale)
-        {
-            <tr>
-                <td>@sede.Descrizione</td>
-                
-            </tr>
-        }
 </table>
+
+<label for="scelta">Scegli: </label>
+<div class="container mt-3">
+    <div class="btn-group" role="group" aria-label="Scelta">
+        <button type="button" class="btn btn-primary" onclick="selectOption('si')">Sì</button>
+        <button type="button" class="btn btn-secondary" onclick="selectOption('no')">No</button>
+    </div>
+</div>
+
+@if (listaLivelloContrattuale != null)
+{
+    @foreach (var livelloContrattuale in listaLivelloContrattuale)
+    {
+        <tr>
+            <td>@livelloContrattuale.Descrizione</td>
+            <td> <button class="btn btn-primary" @onclick="() => ModificaLivelloContrattuale(livelloContrattuale)">Modifica</button></td>
+            <td> <button class="btn btn-danger" @onclick="() => EliminaLivelloContrattuale(livelloContrattuale)">Elimina</button></td>
+        </tr>
+    }
+}
+
+
+        
+@if (LivelloContrattualeDaModificare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modificaLivelloContrattualeTitle">Modifica Livello Contrattuale</h1>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModifica"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="SalvaModifiche">
+                        Descrizione <input type="text" @bind="LivelloContrattualeDaModificare.Descrizione" required /><br /><br />
+                        <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModifica">Annulla</button>
+                        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (LivelloContrattualeDaEliminare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
+                    <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sei sicuro di voler eliminare questo livello contrattuale?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
+                    <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
-    private LivelloContrattuale nuovoLivelloContrattuale = new LivelloContrattuale();
     private List<LivelloContrattuale>? listaLivelloContrattuale;
+    private LivelloContrattuale nuovoLivelloContrattuale = new LivelloContrattuale();
+    private LivelloContrattuale? LivelloContrattualeDaModificare = null;
+    private LivelloContrattuale? LivelloContrattualeDaEliminare = null;
+
+    private void ModificaLivelloContrattuale(LivelloContrattuale livellocontrattuale)
+    {
+        LivelloContrattualeDaModificare = livellocontrattuale;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (LivelloContrattualeDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/LivelloContrattuale", LivelloContrattualeDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                LivelloContrattualeDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica del livello contrattuale.");
+            }
+        }
+    }
+
+    private void EliminaLivelloContrattuale(LivelloContrattuale livellocontrattuale)
+    {
+        LivelloContrattualeDaEliminare = livellocontrattuale;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        LivelloContrattualeDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (LivelloContrattualeDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/LivelloContrattuale/{LivelloContrattualeDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                LivelloContrattualeDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione del livello contrattuale.");
+            }
+        }
+    }
 
     private void ApriFinestraModale()
     {
@@ -99,6 +211,11 @@
     private void ChiudiMessaggio()
     {
         mostraMessaggio = false;
+    }
+    
+    private void ChiudiFinestraModifica()
+    {
+        LivelloContrattualeDaModificare = null;
     }
 
     protected override async Task OnInitializedAsync()

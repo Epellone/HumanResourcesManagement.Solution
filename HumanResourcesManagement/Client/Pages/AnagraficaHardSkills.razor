@@ -19,7 +19,6 @@
                 <div class="modal-body">
                     <form @onsubmit="AggiungiHardSkill">
                         Descrizione <input type="text" class="form-control" @bind="nuovaHardSkill.Descrizione" required /><br />
-                        
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -34,7 +33,10 @@
 <table>
     <tr>
         <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
     </tr>
+</table>
 
 @if (mostraMessaggio)
 {
@@ -46,13 +48,13 @@
                     <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>L'HardSkill è stata aggiunta con successo!</p>
+                    <p>L'Hard Skill è stata aggiunta con successo!</p>
                 </div>
             </div>
         </div>
     </div>
-}
 
+}
 
 
     @if (listaHardSkill != null)
@@ -61,9 +63,54 @@
         {
             <tr>
                 <td>@hardSkill.Descrizione</td>
+                <td> <button class="btn btn-primary" @onclick="() => ModificaHardSkill(hardSkill)">Modifica</button></td>
+                <td> <button class="btn btn-danger" @onclick="() => EliminaHardSkill(hardSkill)">Elimina</button></td>
             </tr>
         }
-</table>
+
+    @if (hardskillDaModificare != null)
+    {
+        <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modificahardSkill">Modifica hardSkill</h1>
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModifica"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form @onsubmit="SalvaModifiche">
+                            Descrizione <input type="text" @bind="hardskillDaModificare.Descrizione" required /><br /><br />
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
+                            <input type="reset" class="btn btn-secondary" value="Cancella" />
+                            <button type="submit" class="btn btn-primary">Salva</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (hardskillDaEliminare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
+                    <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sei sicuro di voler eliminare questa hard skill?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
+                    <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 
 @code
 {
@@ -71,6 +118,59 @@
     private bool mostraMessaggio = false;
     private HardSkill nuovaHardSkill = new HardSkill();
     private List<HardSkill>? listaHardSkill;
+    private HardSkill? hardskillDaModificare = null;
+    private HardSkill? hardskillDaEliminare = null;
+
+    private void ModificaHardSkill(HardSkill hardSkill)
+    {
+       hardskillDaModificare = hardSkill;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (hardskillDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/HardSkill", hardskillDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                hardskillDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica dell'hard skill.");
+            }
+        }
+    }
+
+    private void EliminaHardSkill(HardSkill hardSkill)
+    {
+        hardskillDaEliminare = hardSkill;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        hardskillDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (hardskillDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/HardSkill/{hardskillDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                hardskillDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione dell'hardskills.");
+            }
+        }
+    }
 
     private void ApriFinestraModale()
     {
@@ -80,6 +180,11 @@
     private void ChiudiFinestraModale()
     {
         mostraFinestraModale = false;
+    }
+
+    private void ChiudiFinestraModifica()
+    {
+        hardskillDaModificare = null;
     }
 
     private void ChiudiMessaggio()

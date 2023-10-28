@@ -17,7 +17,7 @@
                 </div>
                 <div class="modal-body">
                     <form @onsubmit="AggiungiBenefits">
-                        Descrizione <input type="text" class="form-control" @bind="nuovoBenefits" required /><br />
+                        Descrizione <input type="text" class="form-control" @bind="nuovoBenefits.Descrizione" required /><br />
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -33,6 +33,8 @@
 <table>
     <tr>
         <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
     </tr>
 </table>
 
@@ -80,11 +82,65 @@
 
 @code
 {
-    private bool chiusurafinestra = false;
+    
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
     private Benefits nuovoBenefits = new Benefits();
     private List<Benefits>? listaBenefits;
+    private Benefits? benefitsDaModificare = null;
+    private Benefits? benefitsDaEliminare = null;
+
+    private void ModificaBenefits(Benefits benefits)
+    {
+        benefitsDaModificare = benefits;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (benefitsDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/Benefits", benefitsDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                benefitsDaModificare = null;
+                await GetAll();
+            }
+
+            else
+            {
+                Console.WriteLine("Errore durante la modifica del candidato.");
+            }
+        }
+    }
+
+    private void EliminaBenefits(Benefits benefits)
+    {
+        benefitsDaEliminare = benefits;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        benefitsDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (benefitsDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/Benefits/{benefitsDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                benefitsDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione del candidato.");
+            }
+        }
+    }
 
     private void ApriFinestraModale()
     {
@@ -96,10 +152,16 @@
         mostraFinestraModale = false;
     }
 
+    private void ChiudiFinestraModifica()
+    {
+        benefitsDaModificare = null;
+    }
+
     private void ChiudiMessaggio()
     {
         mostraMessaggio = false;
     }
+
 
     protected override async Task OnInitializedAsync()
     {

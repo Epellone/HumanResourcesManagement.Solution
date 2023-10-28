@@ -5,8 +5,6 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @inject IJSRuntime JS
 
-
-
 <button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi SoftSkills</button>
 @if (mostraFinestraModale)
 {
@@ -20,9 +18,8 @@
 
                 <div class="modal-body">
                     <form @onsubmit="AggiungiSoftSkill">
-                        Descrizione <input type="text" class="form-control" @bind="nuovaSoftSkill.Descrizione" required /><br />
+                        Descrizione <input type="text" @bind="nuovaSoftSkill.Descrizione" required /><br />
                         
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -34,6 +31,13 @@
         </div>
     </div>
 }
+<table>
+    <tr>
+        <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
+    </tr>
+</table>
 
 @if (mostraMessaggio)
 {
@@ -45,18 +49,12 @@
                     <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>La soft skill è stata aggiunta con successo!</p>
+                    <p>La Soft Skill è stata aggiunta con successo!</p>
                 </div>
             </div>
         </div>
     </div>
 }
-
-<table>
-    <tr>
-        <th>Descrizione</th>
-        
-    </tr>
 
     @if (listaSoftSkills != null)
 
@@ -64,10 +62,53 @@
         {
             <tr>
                 <td>@softskills.Descrizione</td>
-                
+                <td> <button class="btn btn-primary" @onclick="() => ModificaSoftSkill(softskills)">Modifica</button></td>
+                <td> <button class="btn btn-danger" @onclick="() => EliminaSoftSkill(softskills)">Elimina</button></td>
             </tr>
         }
-</table>
+
+    @if (softskillDaModificare != null)
+    {
+        <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modificasoftSkill">Modifica softSkill</h1>
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModifica"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form @onsubmit="SalvaModifiche">
+                            Descrizione <input type="text" @bind="softskillDaModificare.Descrizione" required /><br /><br />
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModifica">Annulla</button>
+                            <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+        @if (softskillDaEliminare != null)
+        {
+        <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
+                        <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Sei sicuro di voler eliminare questa hard skill?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
+                        <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+
 
 @code
 {
@@ -75,6 +116,60 @@
     private bool mostraMessaggio = false;
     private SoftSkill nuovaSoftSkill = new SoftSkill();
     private List<SoftSkill>? listaSoftSkills;
+    private SoftSkill? softskillDaModificare = null;
+    private SoftSkill? softskillDaEliminare = null;
+
+    private void ModificaSoftSkill(SoftSkill softSkill)
+    {
+        softskillDaModificare = softSkill;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (softskillDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/SoftSkill", softskillDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                softskillDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica della soft skill.");
+            }
+        }
+    }
+
+    private void EliminaSoftSkill(SoftSkill softSkill)
+    {
+        softskillDaEliminare = softSkill;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        softskillDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (softskillDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/SoftSkill/{softskillDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                softskillDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione della soft skill.");
+            }
+        }
+    }
+
 
     private void ApriFinestraModale()
     {
@@ -84,6 +179,11 @@
     private void ChiudiFinestraModale()
     {
         mostraFinestraModale = false;
+    }
+
+    private void ChiudiFinestraModifica()
+    {
+        softskillDaModificare = null;
     }
 
     private void ChiudiMessaggio()

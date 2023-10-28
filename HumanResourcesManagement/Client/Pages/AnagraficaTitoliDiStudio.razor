@@ -16,11 +16,11 @@
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Dati TitoliDiStudio</h1>
                     <button type="button" class="btn-close" @onclick="ChiudiFinestraModale" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
                     <form @onsubmit="AggiungiTitoliDiStudio">
                         Descrizione <input type="text" class="form-control" @bind="nuovoTitoloDiStudio.Descrizione" required /><br />
-
-
+                        
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Chiudi</button>
                             <input type="reset" class="btn btn-secondary" value="Cancella" />
@@ -32,6 +32,13 @@
         </div>
     </div>
 }
+<table>
+    <tr>
+        <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
+    </tr>
+
 
 @if (mostraMessaggio)
 {
@@ -43,18 +50,14 @@
                     <button type="button" class="btn-close" @onclick="ChiudiMessaggio" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>I titoli di studio è stata aggiunta con successo!</p>
+                    <p>Il titolo di studio è stata aggiunta con successo!</p>
                 </div>
             </div>
         </div>
     </div>
 }
 
-<table>
-    <tr>
-        <th>Descrizione</th>
-    </tr>
-</table>
+
 
 <label for="scelta">Scegli: </label>
 
@@ -65,21 +68,60 @@
     </div>
 </div>
 
-<table>
-    <tr>
-        <th>Descrizione</th>
 
-    </tr>
 
     @if (listaTitoliDiStudio != null)
 
-        @foreach (var titolodistudio in listaTitoliDiStudio)
+        @foreach (var titolidistudio in listaTitoliDiStudio)
         {
             <tr>
-                <td>@titolodistudio.Descrizione</td>
+                <td>@titolidistudio.Descrizione</td>
             </tr>
         }
+
+    @if (titolodistudioDaModificare != null)
+    {
+        <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modifica">Modifica Titolo di studio</h1>
+                        <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModale"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form @onsubmit="SalvaModifiche">
+                            Descrizione <input type="text" @bind="titolodistudioDaModificare.Descrizione" required /><br /><br />
+                            <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Annulla</button>
+                            <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+        @if (titolodistudioDaEliminare != null)
+{
+        <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
+                        <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
+                    </div>
+                <div class="modal-body">
+                    <p>Sei sicuro di voler eliminare questo titolo di studio?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
+                    <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 </table>
+
 
 @code
 {
@@ -87,7 +129,59 @@
     private bool mostraMessaggio = false;
     private TitoloDiStudio nuovoTitoloDiStudio = new TitoloDiStudio();
     private List<TitoloDiStudio>? listaTitoliDiStudio;
+    private TitoloDiStudio? titolodistudioDaModificare = null;
+    private TitoloDiStudio? titolodistudioDaEliminare = null;
 
+    private void ModificaTitoliDiStudio(TitoloDiStudio titolidistudio)
+    {
+        titolodistudioDaModificare = titolidistudio;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (titolodistudioDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/TitoloDiStudio", titolodistudioDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                titolodistudioDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica dei titoli di studio.");
+            }
+        }
+    }
+
+    private void EliminaTitoloDiStudio(TitoloDiStudio titolidistudio)
+    {
+        titolodistudioDaEliminare = titolidistudio;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        titolodistudioDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (titolodistudioDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/TitoliDiStudio/{titolodistudioDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                titolodistudioDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione del titolo di studio.");
+            }
+        }
+    }
     private void ApriFinestraModale()
     {
         mostraFinestraModale = true;
@@ -126,14 +220,14 @@
     {
         if (IsValid(nuovoTitoloDiStudio))
         {
-            var response = await HttpClient.PostAsJsonAsync("api/TitoliDiStudio", nuovoTitoloDiStudio);
+            var response = await HttpClient.PostAsJsonAsync("api/TitoloDiStudio", nuovoTitoloDiStudio);
 
             if (response.IsSuccessStatusCode)
             {
-                var titolidistudioCreato = await response.Content.ReadFromJsonAsync<TitoloDiStudio>();
-                if (listaTitoliDiStudio != null && titolidistudioCreato != null)
+                var titolodistudioCreato = await response.Content.ReadFromJsonAsync<TitoloDiStudio>();
+                if (listaTitoliDiStudio != null && titolodistudioCreato != null)
                 {
-                    listaTitoliDiStudio.Add(titolidistudioCreato);
+                    listaTitoliDiStudio.Add(titolodistudioCreato);
                     nuovoTitoloDiStudio = new TitoloDiStudio();
                     mostraFinestraModale = false;
                     mostraMessaggio = true;
@@ -141,7 +235,7 @@
             }
             else
             {
-                Console.WriteLine("Errore durante l'aggiunta di titolo di studio.");
+                Console.WriteLine("Errore durante l'aggiunta del titolo di studio.");
             }
         }
     }

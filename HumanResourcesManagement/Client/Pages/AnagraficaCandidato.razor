@@ -7,6 +7,7 @@
 <h3>AnagraficaCandidato</h3>
 
 <button type="button" class="btn btn-primary" @onclick="ApriFinestraModale">Aggiungi Candidato</button>
+
 @if (mostraFinestraModale)
 {
     <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
@@ -67,74 +68,8 @@
         <th>Data di nascita</th>
         <th>Modifica</th>
         <th>Elimina</th>
-
     </tr>
-@if (listaCandidati != null)
-    {
-        @foreach (var candidato in listaCandidati)
-        {
-            <tr>
-                <td>@candidato.Nome</td>
-                <td>@candidato.Cognome</td>
-                <td>@candidato.RecapitoTelefonico</td>
-                <td>@candidato.CF</td>
-                <td>@candidato.Email</td>
-                <td>@candidato.Comune</td>
-                <td>@candidato.Provincia</td>
-                <td>@candidato.DataDiNascita</td>
-                 <td> <button class="btn btn-primary" @onclick="() => ModificaCandidato(candidato)">Modifica</button></td>
-                <td> <button class="btn btn-danger" @onclick="() => EliminaCandidato(candidato)">Elimina</button></td>
-            </tr>
-        }
-    }
 </table>
-@if (candidatoDaModificare != null)
-{
-    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="modificaCandidatoTitle">Modifica Candidato</h1>
-                    <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModifica"></button>
-                </div>
-                <div class="modal-body">
-                    <form @onsubmit="SalvaModifiche">
-                        Nome <input type="text" @bind="candidatoDaModificare.Nome" required /><br /><br />
-                        Cognome <input type="text" @bind="candidatoDaModificare.Cognome" required /><br /><br />
-                        Codice Fiscale <input type="text" @bind="candidatoDaModificare.CF" required /><br /><br />
-                        Data Di Nascita <input type="date" @bind="candidatoDaModificare.DataDiNascita" required /><br /><br />
-                        Email <input type="text" @bind="candidatoDaModificare.Email" required /><br /><br />
-                        Recapito Telefonico <input type="text" @bind="candidatoDaModificare.RecapitoTelefonico" required /><br /><br />
-                        Comune <input type="text" @bind="candidatoDaModificare.Comune" required /><br /><br />
-                        Provincia <input type="text" @bind="candidatoDaModificare.Provincia" required /><br /><br />
-                        <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModifica">Annulla</button>
-                        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-}
-@if (candidatoDaEliminare != null)
-{
-    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
-                    <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Sei sicuro di voler eliminare questo candidato?</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
-                    <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
 
 @code {
     private bool mostraFinestraModale = false;

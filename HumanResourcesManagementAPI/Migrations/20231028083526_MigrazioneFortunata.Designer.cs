@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HumanResourcesManagementAPI.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20231028074301_databaseHR")]
-    partial class databaseHR
+    [Migration("20231028083526_MigrazioneFortunata")]
+    partial class MigrazioneFortunata
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,10 +119,6 @@ namespace HumanResourcesManagementAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<Guid?>("DipendenteID")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("DipendenteId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("SedeID")
@@ -134,10 +130,7 @@ namespace HumanResourcesManagementAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DipendenteID")
-                        .IsUnique();
-
-                    b.HasIndex("DipendenteId");
+                    b.HasIndex("DipendenteID");
 
                     b.HasIndex("SedeID");
 
@@ -682,14 +675,8 @@ namespace HumanResourcesManagementAPI.Migrations
             modelBuilder.Entity("HumanResourcesManagementAPI.Models.Associazioni.Sede_Dipendente", b =>
                 {
                     b.HasOne("HumanResourcesManagementAPI.Models.Classi.Dipendente", "Dipendente")
-                        .WithOne()
-                        .HasForeignKey("HumanResourcesManagementAPI.Models.Associazioni.Sede_Dipendente", "DipendenteID")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("HumanResourcesManagementAPI.Models.Classi.Dipendente", null)
                         .WithMany("SedeDipendente")
-                        .HasForeignKey("DipendenteId");
+                        .HasForeignKey("DipendenteID");
 
                     b.HasOne("HumanResourcesManagementAPI.Models.Classi.Sede", "Sede")
                         .WithMany("SedeDipendente")

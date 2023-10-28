@@ -51,7 +51,11 @@
 <table>
     <tr>
         <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
+
     </tr>
+</table>
 
     @if (listaMansioni != null)
 
@@ -59,20 +63,72 @@
         {
             <tr>
                 <td>@mansione.Descrizione</td>
+
             </tr>
         }
-</table>
-
-
-
 
 
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
+    private bool mostraFinestraModifica = false;
+
     private Mansione nuovaMansione = new Mansione();
     private List<Mansione>? listaMansioni;
+    private Mansione? mansioneDaModificare = null;
+    private Mansione? mansioneDaEliminare = null;
+
+    private void ModificaMansione(Mansione mansione)
+    {
+        mansioneDaModificare = mansione;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (mansioneDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/Mansione", mansioneDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                mansioneDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica della mansione.");
+            }
+        }
+    }
+
+    private void EliminaMansione(Mansione mansione)
+    {
+        mansioneDaEliminare = mansione;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        mansioneDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (mansioneDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/Mansione/{mansioneDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                mansioneDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione della mansione");
+            }
+        }
+    }
 
     private void ApriFinestraModale()
     {
@@ -82,6 +138,11 @@
     private void ChiudiFinestraModale()
     {
         mostraFinestraModale = false;
+    }
+
+    private void ChiudiFinestraModifica()
+    {
+        mansioneDaModificare = null;
     }
 
     private void ChiudiMessaggio()

@@ -53,8 +53,11 @@
 <table>
     <tr>
         <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
     </tr>
 </table>
+
 
 <label for="scelta">Scegli: </label>
 
@@ -65,29 +68,121 @@
     </div>
 </div>
 
-<table>
-    <tr>
-        <th>Descrizione</th>
-        
-    </tr>
 
-    @if (listaTipologiaColloquio != null)
+@if (listaTipologiaColloquio != null)
 
-        @foreach (var sede in listaTipologiaColloquio)
+        @foreach (var TipologiaColloquio in listaTipologiaColloquio)
         {
             <tr>
-                <td>@sede.Descrizione</td>
+                <td>@TipologiaColloquio.Descrizione</td>
+                <td> <button class="btn btn-primary" @onclick="() => ModificaTipologiaColloquio(TipologiaColloquio)">Modifica</button></td>
+                <td> <button class="btn btn-danger" @onclick="() => EliminaTipologiaColloquio(TipologiaColloquio)">Elimina</button></td>
+
             </tr>
         }
-</table>
+
+
+@if (tipologiacolloquioDaModificare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modificaTipologiaColloquioTitle">Modifica Tipologia Colloquio</h1>
+                    <button type="button" class="btn-close" aria-label="Close" @onclick="ChiudiFinestraModale"></button>
+                </div>
+                <div class="modal-body">
+                    <form @onsubmit="SalvaModifiche">
+                        Descrizione <input type="text" @bind="tipologiacolloquioDaModificare.Descrizione" required /><br /><br />
+                        <button type="button" class="btn btn-secondary" @onclick="ChiudiFinestraModale">Annulla</button>
+                        <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (tipologiacolloquioDaEliminare != null)
+{
+    <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="confermaEliminazioneTitle">Conferma Eliminazione</h1>
+                    <button type="button" class="btn-close" @onclick="AnnullaEliminazione" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Sei sicuro di voler eliminare questa tipologia colloquio?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="AnnullaEliminazione">Annulla</button>
+                    <button class="btn btn-danger" @onclick="ConfermaEliminazione">Elimina</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
+
     private TipologiaColloquio nuovaTipologiaColloquio = new TipologiaColloquio();
     private List<TipologiaColloquio>? listaTipologiaColloquio;
+    private TipologiaColloquio? tipologiacolloquioDaModificare = null;
+    private TipologiaColloquio? tipologiacolloquioDaEliminare = null;
 
+    private void ModificaTipologiaColloquio(TipologiaColloquio tipologiacolloquio)
+    {
+        tipologiacolloquioDaModificare = tipologiacolloquio;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (tipologiacolloquioDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/TipologiaColloquio", tipologiacolloquioDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                tipologiacolloquioDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica della Tipologia Colloquio.");
+            }
+        }
+    }
+
+    private void EliminaTipologiaColloquio(TipologiaColloquio tipologiacolloquio)
+    {
+        tipologiacolloquioDaEliminare = tipologiacolloquio;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        tipologiacolloquioDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (tipologiacolloquioDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/TipologiaColloquio/{tipologiacolloquioDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                tipologiacolloquioDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione della Tipologia Colloquio.");
+            }
+        }
+    }
     private void ApriFinestraModale()
     {
         mostraFinestraModale = true;

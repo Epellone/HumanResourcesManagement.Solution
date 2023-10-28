@@ -32,10 +32,6 @@
 }
 
 
-
-
-
-
 @if (mostraMessaggio)
 {
     <div class="modal show" tabindex="-1" style="display: block; background: rgba(0, 0, 0, 0.5);">
@@ -56,8 +52,11 @@
 <table>
     <tr>
         <th>Descrizione</th>
+        <th>Modifica</th>
+        <th>Elimina</th>
 
     </tr>
+</table>
 
     @if (listaTipologiaContratti != null)
 
@@ -67,14 +66,69 @@
                 <td>@tipologiaContratto.Descrizione</td>
             </tr>
         }
-</table>
+
 
 @code
 {
     private bool mostraFinestraModale = false;
     private bool mostraMessaggio = false;
+    private bool mostraFinestraModifica = false;
+
     private TipologiaContratto nuovaTipologiaContratti = new TipologiaContratto();
     private List<TipologiaContratto>? listaTipologiaContratti;
+    private TipologiaContratto? TipologiaContrattoDaModificare = null;
+    private TipologiaContratto? TipologiaContrattoDaEliminare = null;
+
+    private void TipologiaContratto(TipologiaContratto tipologiacontratto)
+    {
+        TipologiaContrattoDaModificare = tipologiacontratto;
+    }
+
+    private async Task SalvaModifiche()
+    {
+        if (TipologiaContrattoDaModificare != null)
+        {
+            var response = await HttpClient.PutAsJsonAsync("api/TipologiaContratto", TipologiaContrattoDaModificare);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TipologiaContrattoDaModificare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante la modifica della tipologia contratto");
+            }
+        }
+    }
+
+    private void EliminaTipologiaContratto(TipologiaContratto tipologiacontratto)
+    {
+        TipologiaContrattoDaEliminare = tipologiacontratto;
+    }
+
+    private void AnnullaEliminazione()
+    {
+        TipologiaContrattoDaEliminare = null;
+    }
+
+    private async Task ConfermaEliminazione()
+    {
+        if (TipologiaContrattoDaEliminare != null)
+        {
+            var response = await HttpClient.DeleteAsync($"api/Candidato/{TipologiaContrattoDaEliminare.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                TipologiaContrattoDaEliminare = null;
+                await GetAll();
+            }
+            else
+            {
+                Console.WriteLine("Errore durante l'eliminazione della Tipologia Contratto.");
+            }
+        }
+    }
 
     private void ApriFinestraModale()
     {
