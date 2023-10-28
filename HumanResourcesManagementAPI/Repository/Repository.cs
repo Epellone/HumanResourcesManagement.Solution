@@ -18,7 +18,13 @@ namespace HumanResourcesManagementAPI.Repository
             return entity;
         }
 
-        public async Task DeleteById(int id)
+        public async Task Update(T entity)
+        {
+            _dbContext.Set<T>().Update(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public async Task DeleteById(Guid id)
         {
             var entityToDelete = await GetById(id);
 
@@ -34,17 +40,10 @@ namespace HumanResourcesManagementAPI.Repository
             return await _dbContext.Set<T>().ToListAsync();
         }
 
-        public async Task<T?> GetById(int id)
+        public async Task<T?> GetById(Guid id)
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }
-
-        public async Task Update(T entity)
-        {
-            _dbContext.Entry(entity).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
-        }
-
 
     }
 }
